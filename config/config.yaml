@@ -1,0 +1,4 @@
+HTTP_PORT: 8888
+DB_DRIVER: "postgresql"
+DB_DSN: "postgres://postgres:123456@localhost:5432/public?sslmode=disable&TimeZone=Asia/Shanghai"
+DB_AUTO_MIGRATE: false

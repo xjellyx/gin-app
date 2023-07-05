@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
-	"gin-app/internal/domain"
-	"go.uber.org/zap"
 	"time"
+
+	"gin-app/internal/domain"
+
+	"go.uber.org/zap"
 )
 
 type signupUsecase struct {

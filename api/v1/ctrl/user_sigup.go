@@ -12,15 +12,14 @@ type UserSignupCtrl struct {
 }
 
 // Signup
-// @tags
-// @Summary
-// @Description
-// @Param
-// @router []
-// @Success 200 {object} response.Response{}
+// @Tags UserSignup
+// @Summary 用户注册
+// @Version 1.0
+// @Produce application/json
+// @Param {} body domain.SignupReq true "body"
+// @Router /api/v1/signup [post]
+// @Success 200 {} {}
 // @Security ApiKeyAuth
-// @Failure 404 {object} string
-// @Failure 500 {object} string
 func (u *UserSignupCtrl) Signup(c *gin.Context) {
 	var req domain.SignupReq
 	var err error

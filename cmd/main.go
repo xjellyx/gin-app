@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -11,11 +10,13 @@ import (
 
 	"gin-app/api/v1/route"
 	"gin-app/internal/bootstrap"
+
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/pflag"
 )
 
 func main() {
-	flag.Parse()
+	pflag.Parse()
 	app, err := bootstrap.App(config)
 	if err != nil {
 		log.Fatalln(err)
@@ -23,7 +24,7 @@ func main() {
 	defer app.Close()
 	g := gin.Default()
 	route.Setup(app.Conf, time.Second*3, app.Database, app.Log, g)
-	g.Run(":8080")
+	_ = g.Run(fmt.Sprintf(`:%v`, app.Conf.HTTPort))
 
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM)
@@ -38,9 +39,14 @@ var (
 )
 
 func init() {
-	flag.StringVar(&config, "c", "config.yaml", "choose config file.")
-	flag.BoolVar(&ShowVersion, "v", false, "version")
-
+	pflag.StringVar(&config, "c", "config/config.yaml", "choose config file.")
+	pflag.BoolVar(&ShowVersion, "v", false, "version")
+	// 配置文件路径
+	pflag.Int("HTTP_PORT", 8818, "")
+	// 数据库
+	pflag.String("DB_DRIVER", "postgresql", "")
+	pflag.String("DB_DSN", "postgres://postgres:123456@localhost:5432/public?sslmode=disable&TimeZone=Asia/Shanghai", "")
+	pflag.Bool("DB_AUTO_MIGRATE", false, "")
 	if len(os.Args) == 2 && (os.Args[1] == "-v" || os.Args[1] == "-version") {
 		fmt.Println(version())
 		os.Exit(1)

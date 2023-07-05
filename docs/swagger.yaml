@@ -1,0 +1,39 @@
+definitions:
+  gin-app_internal_domain.SignupReq:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/signup:
+    post:
+      parameters:
+      - description: body
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/gin-app_internal_domain.SignupReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+      security:
+      - ApiKeyAuth: []
+      summary: 用户注册
+      tags:
+      - UserSignup
+swagger: "2.0"

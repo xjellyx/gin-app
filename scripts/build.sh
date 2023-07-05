@@ -25,7 +25,6 @@ export COMPILE_LDFLAGS='-s -w
                           -X "main.CommitCnt='${COMMIT_CNT}'"
                           -X "main.RuntimeVer='${RUNTIME_VER}'" '
 # 构建可执行二进制
-echo $COMPILE_LDFLAGS
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY=https://proxy.golang.com.cn,direct go build -o bin/gin-app -ldflags="${COMPILE_LDFLAGS}" ./cmd/...
 # 构建docker镜像
 docker build --file build/package/Dockerfile -t gin-app/server .

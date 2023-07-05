@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"gin-app/internal/domain"
-	"gin-app/pkg/orm"
 	"gin-app/pkg/selferror"
 
 	"go.uber.org/zap"
@@ -19,10 +18,10 @@ func App(confPath string) (*Application, error) {
 	if err := selferror.InitI18n(); err != nil {
 		return nil, err
 	}
-	conf := NewConf(confPath)
-	conf.DBAutoMigrate = true
-	conf.DBDriver = orm.Postgresql
-	conf.DBDsn = "postgres://postgres:123456@192.168.3.4:5432/public?sslmode=disable"
+	conf, err := NewConf(confPath)
+	if err != nil {
+		return nil, err
+	}
 	database, err := NewDatabase(conf)
 	if err != nil {
 		return nil, err
