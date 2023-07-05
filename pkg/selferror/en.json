@@ -1,0 +1,5 @@
+{
+  "invalid_input": "Invalid input",
+  "unauthorized": "Unauthorized",
+  "internal_server_error": "Internal server error"
+}

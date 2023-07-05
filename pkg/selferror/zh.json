@@ -1,0 +1,5 @@
+{
+  "invalid_input": "无效的输入",
+  "unauthorized": "未经授权",
+  "internal_server_error": "内部服务器错误"
+}
