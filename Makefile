@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := build_all
 
 # 自动获取系统环境变量
 export DATE := $(shell date +%Y%m%d-%H:%M:%S)
@@ -30,9 +30,10 @@ fmt:
 	done;
 
 # 输出二进制自己修改
-build:
-	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY=https://goproxy.io,direct go build -o bin/go-project-layout -ldflags=${COMPILE_LDFLAGS} .
-
+build_all:
+	# 构建二进制
+	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY=https://proxy.golang.com.cn,direct go build -o bin/gin-app -ldflags=${COMPILE_LDFLAGS} ./cmd/...
+	sh ./scripts/build_docker_image.sh
 # 删除编译结果
 clean:
 	rm -rf ./bin/*

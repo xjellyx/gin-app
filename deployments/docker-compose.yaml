@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  app:
+    image: gin-app/server
+    network_mode: bridge
+    volumes:
+      - "./config:/app/config"
+      - "./log:/app/log"
+    ports:
+      - "8888:8888"
+    command: ./server
