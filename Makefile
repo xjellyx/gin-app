@@ -32,8 +32,8 @@ fmt:
 # 输出二进制自己修改
 build_all:
 	# 构建二进制
+	echo $COMPILE_LDFLAGS
 	env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY=https://proxy.golang.com.cn,direct go build -o bin/gin-app -ldflags=${COMPILE_LDFLAGS} ./cmd/...
-	sh ./scripts/build_docker_image.sh
 # 删除编译结果
 clean:
 	rm -rf ./bin/*
