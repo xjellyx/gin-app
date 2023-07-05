@@ -1,4 +1,4 @@
-package selferror
+package serror
 
 const (
 	ErrorCodeInvalidInput        = "INVALID_INPUT"

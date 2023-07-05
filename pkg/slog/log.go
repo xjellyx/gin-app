@@ -1,4 +1,4 @@
-package selflog
+package slog
 
 import (
 	"context"

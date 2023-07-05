@@ -1,4 +1,4 @@
-package selfcontext
+package scontext
 
 import (
 	"context"

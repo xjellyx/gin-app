@@ -1,4 +1,4 @@
-package selferror
+package serror
 
 import (
 	"encoding/json"

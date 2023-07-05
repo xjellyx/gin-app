@@ -2,7 +2,7 @@ package bootstrap
 
 import (
 	"gin-app/internal/domain"
-	"gin-app/pkg/selferror"
+	"gin-app/pkg/serror"
 
 	"go.uber.org/zap"
 )
@@ -15,7 +15,7 @@ type Application struct {
 
 func App(confPath string) (*Application, error) {
 	// 初始化多语言错误
-	if err := selferror.InitI18n(); err != nil {
+	if err := serror.InitI18n(); err != nil {
 		return nil, err
 	}
 	conf, err := NewConf(confPath)

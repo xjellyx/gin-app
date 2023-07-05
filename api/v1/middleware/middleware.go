@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"gin-app/internal/domain"
-	"gin-app/pkg/selfcontext"
-	"gin-app/pkg/selferror"
+	"gin-app/pkg/scontext"
+	"gin-app/pkg/serror"
 	"github.com/gin-gonic/gin/binding"
 
 	"github.com/gin-gonic/gin"
@@ -29,17 +29,17 @@ func HandlerError() gin.HandlerFunc {
 			}
 			last := c.Errors.Last()
 			// 判断错误是否是自定义错误
-			selfError, ok := last.Err.(selferror.SelfError)
+			selfError, ok := last.Err.(serror.SelfError)
 			if ok {
 				resp.Code = selfError.Code()
 				resp.Msg = selfError.Error()
 			}
 			validationErrors, ok := last.Err.(validator.ValidationErrors)
 			// 翻译验证错误消息
-			translatedErrors := make(selferror.TranslateErr, 0, len(validationErrors))
+			translatedErrors := make(serror.TranslateErr, 0, len(validationErrors))
 			if ok {
 				for _, e := range validationErrors {
-					translatedErrors = append(translatedErrors, e.Translate(translate(selfcontext.GetLanguage(c.Request.Context()))))
+					translatedErrors = append(translatedErrors, e.Translate(translate(scontext.GetLanguage(c.Request.Context()))))
 				}
 				resp.Msg = translatedErrors.Error()
 			}
@@ -77,7 +77,7 @@ func translate(language string) ut.Translator {
 func HandlerHeadersCtx() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		lang := c.GetHeader("X-Language")
-		ctx := selfcontext.SetLanguage(c.Request.Context(), lang)
+		ctx := scontext.SetLanguage(c.Request.Context(), lang)
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}
