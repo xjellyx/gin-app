@@ -23,7 +23,7 @@ func main() {
 	}
 	defer app.Close()
 	g := gin.Default()
-	route.Setup(app.Conf, time.Second*3, app.Database, app.Log, g)
+	route.Setup(app, time.Second*3, g)
 	_ = g.Run(fmt.Sprintf(`:%v`, app.Conf.HTTPort))
 
 	sigterm := make(chan os.Signal, 1)

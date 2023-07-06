@@ -2,7 +2,6 @@ package serror
 
 import (
 	"encoding/json"
-	"strings"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -25,7 +24,7 @@ func InitI18n() error {
 func LocalizeError(lang, key string) (string, error) {
 	localize := i18n.NewLocalizer(bundle, lang)
 	msg, err := localize.Localize(&i18n.LocalizeConfig{
-		MessageID: strings.ToLower(key),
+		MessageID: key,
 	})
 	if err != nil {
 		return "", err

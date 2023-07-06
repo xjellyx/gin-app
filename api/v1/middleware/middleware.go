@@ -4,9 +4,9 @@ import (
 	"gin-app/internal/domain"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
-	"github.com/gin-gonic/gin/binding"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	"github.com/go-playground/locales/zh_Hant_TW"
@@ -15,14 +15,17 @@ import (
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/go-playground/validator/v10/translations/zh_tw"
+	"go.uber.org/zap"
 )
 
 // HandlerError 错误统一处理
-func HandlerError() gin.HandlerFunc {
+// HandlerError 错误统一处理
+func HandlerError(log *zap.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 
 		if c.Errors != nil {
+			isInternalErr := true
 			resp := domain.Response{
 				Code: "FAIL",
 				Data: nil,
@@ -33,6 +36,7 @@ func HandlerError() gin.HandlerFunc {
 			if ok {
 				resp.Code = selfError.Code()
 				resp.Msg = selfError.Error()
+				isInternalErr = false
 			}
 			validationErrors, ok := last.Err.(validator.ValidationErrors)
 			// 翻译验证错误消息
@@ -42,6 +46,12 @@ func HandlerError() gin.HandlerFunc {
 					translatedErrors = append(translatedErrors, e.Translate(translate(scontext.GetLanguage(c.Request.Context()))))
 				}
 				resp.Msg = translatedErrors.Error()
+				isInternalErr = false
+			}
+			if isInternalErr {
+				log.Error("HandlerError | "+c.Request.RequestURI, zap.Error(last.Err))
+				resp.Code = selfError.Code()
+				resp.Msg = serror.Error(serror.ErrCodeInternalServerError, scontext.GetLanguage(c.Request.Context())).Error()
 			}
 			c.JSON(200, resp)
 			return

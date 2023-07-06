@@ -1,7 +1,7 @@
 package serror
 
 const (
-	ErrorCodeInvalidInput        = "INVALID_INPUT"
-	ErrorCodeUnauthorized        = "UNAUTHORIZED"
-	ErrorCodeInternalServerError = "INTERNAL_SERVER_ERROR"
+	ErrCodeInvalidInput        = "INVALID_INPUT"
+	ErrCodeUnauthorized        = "UNAUTHORIZED"
+	ErrCodeInternalServerError = "INTERNAL_SERVER_ERROR"
 )
