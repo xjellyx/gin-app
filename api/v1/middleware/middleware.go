@@ -1,7 +1,10 @@
 package middleware
 
 import (
+	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
+	"gin-app/internal/infra/cache"
+	"gin-app/internal/usecase"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
 
@@ -19,38 +22,32 @@ import (
 )
 
 // HandlerError 错误统一处理
-// HandlerError 错误统一处理
 func HandlerError(log *zap.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 
 		if c.Errors != nil {
-			isInternalErr := true
 			resp := domain.Response{
 				Code: "FAIL",
 				Data: nil,
 			}
 			last := c.Errors.Last()
-			// 判断错误是否是自定义错误
-			selfError, ok := last.Err.(serror.SelfError)
-			if ok {
+			switch last.Err.(type) {
+			case serror.SelfError: // 判断错误是否是自定义错误
+				selfError := last.Err.(serror.SelfError)
 				resp.Code = selfError.Code()
 				resp.Msg = selfError.Error()
-				isInternalErr = false
-			}
-			validationErrors, ok := last.Err.(validator.ValidationErrors)
-			// 翻译验证错误消息
-			translatedErrors := make(serror.TranslateErr, 0, len(validationErrors))
-			if ok {
+			case validator.ValidationErrors: // 判断错误是否是validator错误
+				validationErrors := last.Err.(validator.ValidationErrors)
+				// 翻译验证错误消息
+				translatedErrors := make(serror.TranslateErr, 0, len(validationErrors))
 				for _, e := range validationErrors {
 					translatedErrors = append(translatedErrors, e.Translate(translate(scontext.GetLanguage(c.Request.Context()))))
 				}
 				resp.Msg = translatedErrors.Error()
-				isInternalErr = false
-			}
-			if isInternalErr {
+			default:
 				log.Error("HandlerError | "+c.Request.RequestURI, zap.Error(last.Err))
-				resp.Code = selfError.Code()
+				resp.Code = string(serror.ErrCodeInternalServerError)
 				resp.Msg = serror.Error(serror.ErrCodeInternalServerError, scontext.GetLanguage(c.Request.Context())).Error()
 			}
 			c.JSON(200, resp)
@@ -87,8 +84,50 @@ func translate(language string) ut.Translator {
 func HandlerHeadersCtx() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		lang := c.GetHeader("X-Language")
+		if lang == "" {
+			c.Next()
+			return
+		}
 		ctx := scontext.SetLanguage(c.Request.Context(), lang)
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
+	}
+}
+
+func HandlerAuth(ca cache.Cache) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		if token == "" {
+			token = ctx.Query("token")
+		}
+		msg := serror.Error(serror.ErrUnauthorized, scontext.GetLanguage(ctx.Request.Context())).Error()
+		if token == "" {
+			ctx.AbortWithStatusJSON(401, gin.H{
+				"code": serror.ErrUnauthorized,
+				"msg":  msg,
+			})
+			return
+		}
+		cla := usecase.Claims{}
+		if !usecase.ParseToken(token, &cla, bootstrap.GetConfig().JWTSigningKey) {
+			ctx.AbortWithStatusJSON(401, gin.H{
+				"code": serror.ErrUnauthorized,
+				"msg":  msg,
+			})
+			return
+		}
+		get, err := ca.Get(ctx.Request.Context(), cla.CacheKey)
+		if err != nil {
+			return
+		}
+		if get != token {
+			ctx.AbortWithStatusJSON(401, gin.H{
+				"code": serror.ErrUnauthorized,
+				"msg":  msg,
+			})
+			return
+		}
+		ctx.Request = ctx.Request.WithContext(scontext.SetUserUuid(ctx.Request.Context(), cla.UserUuid))
+		ctx.Next()
 	}
 }

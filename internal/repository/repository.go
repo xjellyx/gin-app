@@ -2,7 +2,12 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"gin-app/internal/domain"
+	"gin-app/pkg/scontext"
+	"gin-app/pkg/serror"
+
+	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -19,10 +24,40 @@ func NewBasicRepo[T any](database domain.Database) domain.BasicRepo[T] {
 
 // Create 创建一条记录
 func (b *basicRepo[T]) Create(ctx context.Context, ent *T) error {
-	if err := b.database.DB(ctx).Create(ent).Error; err != nil {
-		return err
+	db := b.database.DB(ctx).Create(ent)
+	if err := db.Error; err != nil {
+		return translateErr(ctx, db)
 	}
 	return nil
+}
+
+func translateErr(ctx context.Context, db *gorm.DB) (err error) {
+	err = db.Error
+	lan := scontext.GetLanguage(ctx)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		switch db.Statement.Table {
+		case domain.User{}.TableName():
+			return serror.Error(serror.ErrUserRecordNotFound, lan)
+		default:
+			return serror.Error(serror.ErrRecordNotFound, lan)
+		}
+		return
+	}
+
+	errV, ok := err.(*pgconn.PgError)
+	if !ok {
+		return
+	}
+
+	switch errV.Code {
+	case "23505":
+		switch errV.TableName {
+		case domain.User{}.TableName():
+			return domain.TranslateUserDBErr(errV, lan)
+		}
+	}
+
+	return err
 }
 
 func processCond(db *gorm.DB, conds []clause.Expression) *gorm.DB {
@@ -53,7 +88,8 @@ func (b *basicRepo[T]) Find(ctx context.Context, limit domain.Limit, conds ...cl
 	// 如果需要全部数据
 	if limit.Count {
 		if err := db.Count(&count).Error; err != nil {
-			return nil, 0, nil
+			err = translateErr(ctx, db)
+			return nil, 0, err
 		}
 	}
 	var (
@@ -73,6 +109,7 @@ func (b *basicRepo[T]) Find(ctx context.Context, limit domain.Limit, conds ...cl
 	}
 
 	if err := db.Find(&data).Error; err != nil {
+		err = translateErr(ctx, db)
 		return nil, 0, err
 	}
 	return data, count, nil
@@ -83,7 +120,11 @@ func (b *basicRepo[T]) Delete(ctx context.Context, id int) error {
 	var (
 		model T
 	)
-	return b.database.DB(ctx).Where("id = ?", id).Delete(&model).Error
+	db := b.database.DB(ctx).Where("id = ?", id).Delete(&model)
+	if err := db.Error; err != nil {
+		return translateErr(ctx, db)
+	}
+	return nil
 }
 
 // FindOne 查询一条数据
@@ -92,7 +133,9 @@ func (b *basicRepo[T]) FindOne(ctx context.Context, id int) (*T, error) {
 		model T
 		data  *T
 	)
-	if err := b.database.DB(ctx).Model(&model).Where("id = ?", id).First(&data).Error; err != nil {
+	db := b.database.DB(ctx).Model(&model).Where("id = ?", id).First(&data)
+	if err := db.Error; err != nil {
+		err = translateErr(ctx, db)
 		return nil, err
 	}
 	return data, nil
@@ -107,6 +150,7 @@ func (b *basicRepo[T]) FindOneBy(ctx context.Context, conds ...clause.Expression
 	db := b.database.DB(ctx).Model(&model)
 	db = processCond(db, conds)
 	if err := db.First(&data).Error; err != nil {
+		err = translateErr(ctx, db)
 		return nil, err
 	}
 	return data, nil
@@ -117,7 +161,9 @@ func (b *basicRepo[T]) Update(ctx context.Context, id int, ent *T) error {
 	var (
 		model T
 	)
-	if err := b.database.DB(ctx).Model(&model).Where("id = ?", id).Updates(ent).Error; err != nil {
+	db := b.database.DB(ctx).Model(&model).Where("id = ?", id).Updates(ent)
+	if err := db.Error; err != nil {
+		err = translateErr(ctx, db)
 		return err
 	}
 	return nil

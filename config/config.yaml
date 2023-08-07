@@ -1,4 +1,17 @@
 HTTP_PORT: 8888
 DB_DRIVER: "postgresql"
-DB_DSN: "postgres://postgres:123456@localhost:5432/public?sslmode=disable&TimeZone=Asia/Shanghai"
-DB_AUTO_MIGRATE: false
+DB_DSN: "postgres://postgres:123456@localhost:5432/demo?sslmode=disable&TimeZone=Asia/Shanghai"
+DB_AUTO_MIGRATE: true
+# redis 连接数据
+RDB_ADDR: "localhost:6379"
+RDB_PASS: ""
+RDB_DB: 2
+RDB_PREFIX: ""
+# jwt
+# token过期时间，分钟
+JWT_EXPIRE_TIME: 1440
+# 刷新token过期时间，分钟
+JWT_REFRESH_EXPIRE_TIME: 1440
+JWT_SIGNING_METHOD: "hs512"
+JWT_SIGNING_KEY: "dcb6304a-d457-44ad-9cbb-24bb2ddceaf5"
+JWT_REFRESH_SIGNING_KEY: "a79d3b86-d585-4b32-ab63-69e64ad81e3e"

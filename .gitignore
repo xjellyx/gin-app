@@ -18,5 +18,6 @@ bin/gin-app
 *.rar
 *.tar.gz
 run
+log
 # Dependency directories (remove the comment below to include it)
 # vendor/

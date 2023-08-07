@@ -42,3 +42,15 @@ type Response struct {
 	// Data 返回数据
 	Data any `json:"data"`
 }
+
+// Pagination 页数信息
+type Pagination struct {
+	Total    int64 `json:"total"`
+	PageSize uint  `json:"pageSize"`
+	PageNum  uint  `json:"pageNum"`
+}
+
+type QueryReq struct {
+	PageSize uint `query:"pageSize"` // 每页数量
+	PageNum  uint `query:"pageNum"`  // 页数
+}

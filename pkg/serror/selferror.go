@@ -18,13 +18,13 @@ type SelfError interface {
 }
 
 type selfError struct {
-	code     string // 业务码
-	message  string // 错误描述
+	code     ErrorCode // 业务码
+	message  string    // 错误描述
 	stackErr error
 }
 
-func Error(businessCode string, language string) SelfError {
-	msg, err := LocalizeError(language, businessCode)
+func Error(businessCode ErrorCode, language string) SelfError {
+	msg, err := LocalizeError(language, string(businessCode))
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +48,7 @@ func (e *selfError) WithStack(err error) {
 
 // Code 错误代码
 func (e *selfError) Code() string {
-	return e.code
+	return string(e.code)
 }
 
 func (e *selfError) Message() string {

@@ -25,7 +25,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/gin-app_internal_domain.SignupReq"
+                            "$ref": "#/definitions/domain.SignupReq"
                         }
                     }
                 ],
@@ -38,24 +38,153 @@
                     }
                 }
             }
+        },
+        "/api/v1/sing-in": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSingIn"
+                ],
+                "summary": "用户登入",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SingInReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserHimSelf"
+                ],
+                "summary": "用户信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAdminCtrl"
+                ],
+                "summary": "用户列表",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAdminCtrl"
+                ],
+                "summary": "添加用户",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "gin-app_internal_domain.SignupReq": {
+        "domain.SignupReq": {
             "type": "object",
             "required": [
-                "email",
-                "name",
+                "password"
+            ],
+            "properties": {
+                "code": {
+                    "description": "验证码",
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 8
+                },
+                "phone": {
+                    "description": "Username     string `json:\"name\" binding:\"required\"`",
+                    "type": "string"
+                }
+            }
+        },
+        "domain.SingInReq": {
+            "type": "object",
+            "required": [
                 "password"
             ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
                 "password": {
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 8
+                },
+                "phone": {
                     "type": "string"
                 }
             }

@@ -16,10 +16,12 @@ func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.
 	us := usecase.NewSignupUsecase(usecase.SignupUsecaseConfig{
 		Repo:           repo,
 		Log:            app.Log,
+		Cache:          app.Rdb,
 		ContextTimeout: timeout,
 	})
 	sc := ctrl.UserSignupCtrl{
 		Usecase: us,
 	}
 	group.POST("/signup", sc.Signup)
+	group.POST("/sing-in", sc.SingIn)
 }

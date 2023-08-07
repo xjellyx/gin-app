@@ -1,5 +1,15 @@
 {
   "INVALID_INPUT": "无效的输入",
   "UNAUTHORIZED": "未经授权",
-  "INTERNAL_SERVER_ERROR": "内部服务器错误"
+  "INTERNAL_SERVER_ERROR": "内部服务器错误",
+  "EMAIL_ALREADY_IN_USE": "该邮箱已被注册",
+  "PHONE_NUMBER_ALREADY_IN_USE": "该手机号已被注册",
+  "USERNAME_ALREADY_IN_USE": "该用户名已被注册",
+  "USER_INACTIVE": "该用户已被禁用",
+  "USER_FREEZE": "该用户已被冻结",
+  "USER_DELETED": "该用户已被删除",
+  "USER_STATUS_ABNORMAL": "该用户状态异常",
+  "INVALID_TOKEN": "无效的令牌",
+  "USER_RECORD_NOT_FOUND": "找不到用户记录",
+  "RECORD_NOT_FOUND": "找不到记录"
 }

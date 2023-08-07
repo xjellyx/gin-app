@@ -1,15 +1,32 @@
 definitions:
-  gin-app_internal_domain.SignupReq:
+  domain.SignupReq:
+    properties:
+      code:
+        description: 验证码
+        type: string
+      email:
+        type: string
+      password:
+        maxLength: 16
+        minLength: 8
+        type: string
+      phone:
+        description: Username     string `json:"name" binding:"required"`
+        type: string
+    required:
+    - password
+    type: object
+  domain.SingInReq:
     properties:
       email:
         type: string
-      name:
-        type: string
       password:
+        maxLength: 16
+        minLength: 8
+        type: string
+      phone:
         type: string
     required:
-    - email
-    - name
     - password
     type: object
 info:
@@ -23,7 +40,7 @@ paths:
         name: '{}'
         required: true
         schema:
-          $ref: '#/definitions/gin-app_internal_domain.SignupReq'
+          $ref: '#/definitions/domain.SignupReq'
       produces:
       - application/json
       responses:
@@ -36,4 +53,66 @@ paths:
       summary: 用户注册
       tags:
       - UserSignup
+  /api/v1/sing-in:
+    post:
+      parameters:
+      - description: body
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SingInReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登入
+      tags:
+      - UserSingIn
+  /api/v1/user/info:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+      security:
+      - ApiKeyAuth: []
+      summary: 用户信息
+      tags:
+      - UserHimSelf
+  /api/v1/users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+      security:
+      - ApiKeyAuth: []
+      summary: 用户列表
+      tags:
+      - UserAdminCtrl
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+      security:
+      - ApiKeyAuth: []
+      summary: 添加用户
+      tags:
+      - UserAdminCtrl
 swagger: "2.0"

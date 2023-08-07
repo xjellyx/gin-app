@@ -17,4 +17,7 @@ func Setup(app *bootstrap.Application, timeout time.Duration, gin *gin.Engine) {
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError(app.Log))
 	NewSignupCtl(app, timeout, publicRouter)
+	publicRouter.Use(middleware.HandlerAuth(app.Rdb))
+	NewUserHimSelfCtrl(app, timeout, publicRouter)
+	NewAdminCtrl(app, timeout, publicRouter)
 }

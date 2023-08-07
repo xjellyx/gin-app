@@ -1,5 +1,15 @@
 {
   "INVALID_INPUT": "Invalid input",
   "UNAUTHORIZED": "Unauthorized",
-  "INTERNAL_SERVER_ERROR": "Internal server error"
+  "INTERNAL_SERVER_ERROR": "Internal server error",
+  "EMAIL_ALREADY_IN_USE": "Email is already in use",
+  "PHONE_NUMBER_ALREADY_IN_USE": "Phone number is already in use",
+  "USERNAME_ALREADY_IN_USE": "Username is already in use",
+  "USER_INACTIVE": "User is inactive",
+  "USER_FREEZE": "User is froze",
+  "USER_DELETED": "User is deleted",
+  "USER_STATUS_ABNORMAL": "User status is abnormal",
+  "INVALID_TOKEN": "Invalid token",
+  "USER_RECORD_NOT_FOUND": "User record not found",
+  "ERR_RECORD_NOT_FOUND": "Record not found"
 }

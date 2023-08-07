@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"log"
 	"strings"
+	"time"
 
 	"gin-app/pkg/orm"
 
@@ -13,10 +14,22 @@ import (
 
 // Conf 配置环境
 type Conf struct {
-	HTTPort       uint           `mapstructure:"HTTP_PORT"`
+	HTTPort uint `mapstructure:"HTTP_PORT"`
+	//
 	DBDriver      orm.DriverName `mapstructure:"DB_DRIVER"`
 	DBDsn         string         `mapstructure:"DB_DSN"`
 	DBAutoMigrate bool           `mapstructure:"DB_AUTO_MIGRATE"`
+	//
+	RDBAddr      string `mapstructure:"RDB_ADDR"`
+	RDBPassword  string `mapstructure:"RDB_PASSWORD"`
+	RDBDB        int    `mapstructure:"RDB_DB"`
+	RDBKeyPrefix string `mapstructure:"RDB_KEY_PREFIX"`
+	//
+	JWTExpireTime        time.Duration `mapstructure:"JWT_EXPIRE_TIME"`
+	JWTRefreshExpireTime time.Duration `mapstructure:"JWT_REFRESH_EXPIRE_TIME"`
+	JWTSigningMethod     string        `mapstructure:"JWT_SIGNING_METHOD"`
+	JWTSigningKey        string        `mapstructure:"JWT_SIGNING_KEY"`
+	JWTRefreshSingingKey string        `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
 }
 
 func NewConf(configPath string) (*Conf, error) {
@@ -45,5 +58,12 @@ func NewConf(configPath string) (*Conf, error) {
 			log.Fatal(err)
 		}
 	})
+	GlobalConf = conf
 	return conf, nil
 }
+
+func GetConfig() Conf {
+	return *GlobalConf
+}
+
+var GlobalConf *Conf
