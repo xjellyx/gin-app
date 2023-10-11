@@ -3,10 +3,10 @@ package domain
 import (
 	"strings"
 
-	"gin-app/pkg/orm"
 	"gin-app/pkg/serror"
 
 	"github.com/jackc/pgx/v5/pgconn"
+	gormgenerics "github.com/olongfen/gorm-generics"
 	"gorm.io/gorm"
 )
 
@@ -42,11 +42,9 @@ func (s User) TableName() string {
 	return "users"
 }
 
-var _ orm.Modeler = (*User)(nil)
-
 // UserRepo user repository
 type UserRepo interface {
-	BasicRepo[User]
+	gormgenerics.BasicRepo[User]
 }
 
 func TranslateUserDBErr(errV *pgconn.PgError, lan string) error {

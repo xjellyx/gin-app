@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -73,10 +74,11 @@ func (s *signupUsecase) SingIn(ctx context.Context, req *domain.SingInReq) (*dom
 			Value:  req.Phone,
 		}
 	}
-	user, err := s.cfg.Repo.FindOneBy(ctx, cond)
+	user, err := s.cfg.Repo.FindOneBy(ctx, []clause.Expression{cond})
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("wwwwwwwwwwwwwwwww", req.Password)
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		return nil, err
 	}

@@ -7,6 +7,7 @@ import (
 	"gin-app/internal/domain"
 
 	"github.com/google/uuid"
+	gormgenerics "github.com/olongfen/gorm-generics"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm/clause"
 )
@@ -33,7 +34,7 @@ func NewUserAdminUsecase(cfg UserAdminConfig) domain.UserAdminUsecase {
 func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListReq) (*domain.UserAdminListResp, error) {
 	ctx, cancelFunc := context.WithTimeout(ctx, u.cfg.ContextTimeout)
 	defer cancelFunc()
-	data, total, err := u.cfg.Repo.Find(ctx, domain.Limit{
+	data, total, err := u.cfg.Repo.Find(ctx, &gormgenerics.Limit{
 		PageNum:  req.PageNum,
 		PageSize: req.PageSize,
 		Count:    true,

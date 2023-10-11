@@ -1,18 +1,19 @@
 package bootstrap
 
 import (
-	"gin-app/internal/domain"
 	"gin-app/internal/infra/cache"
 	"gin-app/pkg/serror"
 	"gin-app/pkg/slog"
 
+	gormgenerics "github.com/olongfen/gorm-generics"
+	"github.com/olongfen/gorm-generics/achieve"
 	"go.uber.org/zap"
 )
 
 type Application struct {
 	Conf     *Conf
 	Log      *zap.Logger
-	Database domain.Database
+	Database gormgenerics.Database
 	Rdb      cache.Cache
 }
 
@@ -37,7 +38,7 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	achieve.TranslateError = translateErr
 	app := &Application{Database: database, Conf: conf, Log: logger, Rdb: rdb}
 	return app, nil
 }

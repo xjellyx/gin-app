@@ -31,7 +31,7 @@ func (u *userHimSelfUsecase) Info(ctx context.Context) (*domain.UserInfo, error)
 		Column: "uuid",
 		Value:  uid,
 	}
-	ret, err := u.cfg.Repo.FindOneBy(ctx, cond)
+	ret, err := u.cfg.Repo.FindOneBy(ctx, []clause.Expression{cond})
 	if err != nil {
 		return nil, err
 	}

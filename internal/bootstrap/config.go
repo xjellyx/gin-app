@@ -5,9 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"gin-app/pkg/orm"
-
 	"github.com/fsnotify/fsnotify"
+	"github.com/olongfen/gorm-generics/achieve"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -16,9 +15,9 @@ import (
 type Conf struct {
 	HTTPort uint `mapstructure:"HTTP_PORT"`
 	//
-	DBDriver      orm.DriverName `mapstructure:"DB_DRIVER"`
-	DBDsn         string         `mapstructure:"DB_DSN"`
-	DBAutoMigrate bool           `mapstructure:"DB_AUTO_MIGRATE"`
+	DBDriver      achieve.DriverName `mapstructure:"DB_DRIVER"`
+	DBDsn         string             `mapstructure:"DB_DSN"`
+	DBAutoMigrate bool               `mapstructure:"DB_AUTO_MIGRATE"`
 	//
 	RDBAddr      string `mapstructure:"RDB_ADDR"`
 	RDBPassword  string `mapstructure:"RDB_PASSWORD"`
@@ -30,6 +29,7 @@ type Conf struct {
 	JWTSigningMethod     string        `mapstructure:"JWT_SIGNING_METHOD"`
 	JWTSigningKey        string        `mapstructure:"JWT_SIGNING_KEY"`
 	JWTRefreshSingingKey string        `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
+	JWTEnabled           bool          `mapstructure:"JWT_ENABLED"`
 }
 
 func NewConf(configPath string) (*Conf, error) {
