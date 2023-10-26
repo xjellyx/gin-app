@@ -23,6 +23,7 @@ func NewDatabase(conf *Conf, logger *zap.Logger) (gormgenerics.Database, error) 
 		achieve.WithAutoMigrateDst([]any{&domain.User{}}),
 		achieve.WithLogger(slog.NewDBLog(logger)),
 		achieve.WithOpentracingPlugin(&achieve.OpentracingPlugin{}),
+		achieve.WithTranslateError(translateErr),
 	)
 	if err != nil {
 		return nil, err
@@ -47,7 +48,6 @@ func translateErr(ctx context.Context, db *gorm.DB) (err error) {
 	if !ok {
 		return
 	}
-
 	switch errV.Code {
 	case "23505":
 		switch errV.TableName {

@@ -6,7 +6,6 @@ import (
 	"gin-app/pkg/slog"
 
 	gormgenerics "github.com/olongfen/gorm-generics"
-	"github.com/olongfen/gorm-generics/achieve"
 	"go.uber.org/zap"
 )
 
@@ -38,7 +37,6 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	achieve.TranslateError = translateErr
 	app := &Application{Database: database, Conf: conf, Log: logger, Rdb: rdb}
 	return app, nil
 }
