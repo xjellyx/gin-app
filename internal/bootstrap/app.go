@@ -6,6 +6,7 @@ import (
 	"gin-app/pkg/slog"
 
 	gormgenerics "github.com/olongfen/gorm-generics"
+	"github.com/ulule/limiter/v3"
 	"go.uber.org/zap"
 )
 
@@ -14,6 +15,7 @@ type Application struct {
 	Log      *zap.Logger
 	Database gormgenerics.Database
 	Rdb      cache.Cache
+	Limiter  *limiter.Limiter
 }
 
 var GlobalLog *zap.Logger
@@ -33,11 +35,20 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	rdb, err := cache.NewRDB(cache.Config{})
+	rdb, err := cache.NewRDB(cache.Config{
+		Addr:      conf.RDBAddr,
+		DB:        conf.RDBDB,
+		Password:  conf.RDBPassword,
+		KeyPrefix: conf.RDBKeyPrefix,
+	})
 	if err != nil {
 		return nil, err
 	}
-	app := &Application{Database: database, Conf: conf, Log: logger, Rdb: rdb}
+	limit, err := NewLimitRate(conf)
+	if err != nil {
+		return nil, err
+	}
+	app := &Application{Database: database, Conf: conf, Log: logger, Rdb: rdb, Limiter: limit}
 	return app, nil
 }
 

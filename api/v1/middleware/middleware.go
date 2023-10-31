@@ -7,6 +7,7 @@ import (
 	"gin-app/internal/usecase"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
+	"github.com/ulule/limiter/v3"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -18,6 +19,7 @@ import (
 	en_translation "github.com/go-playground/validator/v10/translations/en"
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/go-playground/validator/v10/translations/zh_tw"
+	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"
 	"go.uber.org/zap"
 )
 
@@ -130,4 +132,8 @@ func HandlerAuth(ca cache.Cache) gin.HandlerFunc {
 		ctx.Request = ctx.Request.WithContext(scontext.SetUserUuid(ctx.Request.Context(), cla.UserUuid))
 		ctx.Next()
 	}
+}
+
+func LimitRequestRate(limit *limiter.Limiter) gin.HandlerFunc {
+	return mgin.NewMiddleware(limit)
 }

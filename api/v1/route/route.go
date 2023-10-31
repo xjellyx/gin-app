@@ -12,8 +12,9 @@ import (
 	ginswagger "github.com/swaggo/gin-swagger"
 )
 
-func Setup(app *bootstrap.Application, timeout time.Duration, gin *gin.Engine) {
-	publicRouter := gin.Group("/api/v1")
+func Setup(app *bootstrap.Application, timeout time.Duration, en *gin.Engine) {
+	en.Use(middleware.LimitRequestRate(app.Limiter))
+	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError(app.Log))
 	NewSignupCtl(app, timeout, publicRouter)
