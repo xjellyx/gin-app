@@ -18,7 +18,7 @@ type UserSignupCtrl struct {
 // @Produce application/json
 // @Param {} body domain.SignupReq true "body"
 // @Router /api/v1/signup [post]
-// @Success 200 {} {}
+// @Success 200 {object} domain.Response
 // @Security ApiKeyAuth
 func (u *UserSignupCtrl) Signup(c *gin.Context) {
 	var req domain.SignupReq
@@ -48,7 +48,7 @@ func (u *UserSignupCtrl) Signup(c *gin.Context) {
 // @Produce application/json
 // @Param {} body domain.SingInReq true "body"
 // @Router /api/v1/sing-in [post]
-// @Success 200 {} {}
+// @Success 200 {object} domain.Response
 // @Security ApiKeyAuth
 func (u *UserSignupCtrl) SingIn(c *gin.Context) {
 	var req domain.SingInReq

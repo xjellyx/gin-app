@@ -16,7 +16,7 @@ type UserHimSelfCtrl struct {
 // @Version 1.0
 // @Produce application/json
 // @Router /api/v1/user/info [get]
-// @Success 200 {} {}
+// @Success 200 {object} domain.Response{data=domain.UserInfo}
 // @Security ApiKeyAuth
 func (u *UserHimSelfCtrl) GetUserInfo(c *gin.Context) {
 

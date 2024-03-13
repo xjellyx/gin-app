@@ -1,4 +1,24 @@
 definitions:
+  domain.Pagination:
+    properties:
+      pageNum:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
+  domain.Response:
+    properties:
+      code:
+        description: Code 0为成功，其他都是失败
+        type: string
+      data:
+        description: Data 返回数据
+      msg:
+        description: Msg 返回提示
+        type: string
+    type: object
   domain.SignupReq:
     properties:
       code:
@@ -29,6 +49,89 @@ definitions:
     required:
     - password
     type: object
+  domain.UserAdminListResp:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/domain.UserListInfo'
+        type: array
+      pagination:
+        $ref: '#/definitions/domain.Pagination'
+    type: object
+  domain.UserGender:
+    enum:
+    - 1
+    - 2
+    - 3
+    type: integer
+    x-enum-comments:
+      GenderFemale: female
+      GenderMale: male
+    x-enum-varnames:
+    - GenderUnknown
+    - GenderMale
+    - GenderFemale
+  domain.UserInfo:
+    properties:
+      createdAt:
+        description: 注册时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/domain.UserGender'
+        description: 性别 1未知、2男性、3女性
+      phone:
+        description: 电话
+        type: string
+      username:
+        description: username
+        type: string
+    type: object
+  domain.UserListInfo:
+    properties:
+      createdAt:
+        description: 注册时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/domain.UserGender'
+        description: 性别 1未知、2男性、3女性
+      id:
+        type: integer
+      phone:
+        description: 电话
+        type: string
+      status:
+        $ref: '#/definitions/domain.UserStatus'
+      username:
+        description: username
+        type: string
+      uuid:
+        type: string
+    type: object
+  domain.UserStatus:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    type: integer
+    x-enum-comments:
+      StatusDeleted: deleted
+      StatusFreeze: 冻结
+      StatusLocked: 锁定
+      StatusNormal: 正常
+    x-enum-varnames:
+    - StatusNormal
+    - StatusLocked
+    - StatusFreeze
+    - StatusDeleted
 info:
   contact: {}
 paths:
@@ -47,7 +150,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: ""
+            $ref: '#/definitions/domain.Response'
       security:
       - ApiKeyAuth: []
       summary: 用户注册
@@ -68,7 +171,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: ""
+            $ref: '#/definitions/domain.Response'
       security:
       - ApiKeyAuth: []
       summary: 用户登入
@@ -82,7 +185,12 @@ paths:
         "200":
           description: OK
           schema:
-            type: ""
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.UserInfo'
+              type: object
       security:
       - ApiKeyAuth: []
       summary: 用户信息
@@ -96,7 +204,12 @@ paths:
         "200":
           description: OK
           schema:
-            type: ""
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.UserAdminListResp'
+              type: object
       security:
       - ApiKeyAuth: []
       summary: 用户列表
@@ -109,7 +222,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: ""
+            $ref: '#/definitions/domain.Response'
       security:
       - ApiKeyAuth: []
       summary: 添加用户

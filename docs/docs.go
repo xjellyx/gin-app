@@ -45,7 +45,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": ""
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -80,7 +80,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": ""
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -104,7 +104,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": ""
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.UserInfo"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -128,7 +140,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": ""
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.UserAdminListResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -150,7 +174,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": ""
+                            "$ref": "#/definitions/domain.Response"
                         }
                     }
                 }
@@ -158,6 +182,36 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.Pagination": {
+            "type": "object",
+            "properties": {
+                "pageNum": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Code 0为成功，其他都是失败",
+                    "type": "string"
+                },
+                "data": {
+                    "description": "Data 返回数据"
+                },
+                "msg": {
+                    "description": "Msg 返回提示",
+                    "type": "string"
+                }
+            }
+        },
         "domain.SignupReq": {
             "type": "object",
             "required": [
@@ -200,6 +254,125 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "domain.UserAdminListResp": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.UserListInfo"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/domain.Pagination"
+                }
+            }
+        },
+        "domain.UserGender": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3
+            ],
+            "x-enum-comments": {
+                "GenderFemale": "female",
+                "GenderMale": "male"
+            },
+            "x-enum-varnames": [
+                "GenderUnknown",
+                "GenderMale",
+                "GenderFemale"
+            ]
+        },
+        "domain.UserInfo": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "注册时间",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "gender": {
+                    "description": "性别 1未知、2男性、3女性",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/domain.UserGender"
+                        }
+                    ]
+                },
+                "phone": {
+                    "description": "电话",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "username",
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UserListInfo": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "注册时间",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "gender": {
+                    "description": "性别 1未知、2男性、3女性",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/domain.UserGender"
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "description": "电话",
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/domain.UserStatus"
+                },
+                "username": {
+                    "description": "username",
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UserStatus": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "x-enum-comments": {
+                "StatusDeleted": "deleted",
+                "StatusFreeze": "冻结",
+                "StatusLocked": "锁定",
+                "StatusNormal": "正常"
+            },
+            "x-enum-varnames": [
+                "StatusNormal",
+                "StatusLocked",
+                "StatusFreeze",
+                "StatusDeleted"
+            ]
         }
     }
 }`

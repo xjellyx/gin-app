@@ -5,9 +5,8 @@
 
 # 项目构建
 ```shell
-# 执行 make build_all ,会自动生产run目录，该目录是服务运行所需的文件
-make build_all
-cd run && sh loah.sh 
-docker-compose up -d
+# 执行 make build ,会自动生产run目录，该目录是服务运行所需的文件
+make build
+cd run && docker-compose up -d
 
 ```

@@ -17,7 +17,7 @@ type UserAdminCtrl struct {
 // @Version 1.0
 // @Produce application/json
 // @Router /api/v1/users [get]
-// @Success 200 {} domain.UserAdminListResp
+// @Success 200 {object} domain.Response{data=domain.UserAdminListResp}
 // @Security ApiKeyAuth
 func (u *UserAdminCtrl) GetUserList(c *gin.Context) {
 	var (
@@ -47,7 +47,7 @@ func (u *UserAdminCtrl) GetUserList(c *gin.Context) {
 // @Version 1.0
 // @Produce application/json
 // @Router /api/v1/users [post]
-// @Success 200 {} {}
+// @Success 200 {object} domain.Response
 // @Security ApiKeyAuth
 func (u *UserAdminCtrl) AddUser(c *gin.Context) {
 	var (
