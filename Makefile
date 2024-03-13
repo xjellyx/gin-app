@@ -7,7 +7,7 @@ fmt:
 	done;
 
 # 输出二进制自己修改
-build_all:
+build:
 	# 构建可以运行的目录
 	sh scripts/build.sh
 # 删除编译结果

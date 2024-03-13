@@ -28,14 +28,18 @@ export COMPILE_LDFLAGS='-s -w
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOPROXY=https://proxy.golang.com.cn,direct go build -o bin/gin-app -ldflags="${COMPILE_LDFLAGS}" ./cmd/...
 # 重要提示,镜像名称在新建项目时必须自己修改!!!
 # 构建docker镜像
-docker build --file build/package/Dockerfile -t gin-app/server .
+docker build . -t gin-app/server
+mkdir -p run/
 # 保存docker镜像
-docker save gin-app/server -o bin/gin-app-server.tar.gz
+docker save gin-app/server -o run/gin-app-server.tar.gz
 # 把准备好的数据copy到run目录，方便之间迁移部署
-mkdir -p run/resource
-cp bin/gin-app-server.tar.gz run/
+cp -r bin run/
 rsync -avuz config run/
-cp deployments/docker-compose.yaml run/
-echo  "#!/bin/bsh
+rsync -avuz docker-compose.yaml run/
+rsync -avuz Dockerfile run/
+echo "#!/bin/bash
+docker build . -t gin-app/server
+" > run/build.sh
+echo  "#!/bin/bash
 docker load -i gin-app-server.tar.gz
 " > run/load.sh
