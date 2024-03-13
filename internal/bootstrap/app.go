@@ -1,28 +1,27 @@
 package bootstrap
 
 import (
+	"github.com/lmittmann/tint"
+	"log/slog"
+	"os"
+	"time"
+
 	"gin-app/internal/infra/cache"
 	"gin-app/pkg/serror"
-	"gin-app/pkg/slog"
 
 	gormgenerics "github.com/olongfen/gorm-generics"
 	"github.com/ulule/limiter/v3"
-	"go.uber.org/zap"
 )
 
 type Application struct {
 	Conf     *Conf
-	Log      *zap.Logger
 	Database gormgenerics.Database
 	Rdb      cache.Cache
 	Limiter  *limiter.Limiter
 }
 
-var GlobalLog *zap.Logger
-
 func App(confPath string) (*Application, error) {
-	logger := slog.NewProduceLogger()
-	GlobalLog = logger
+
 	// 初始化多语言错误
 	if err := serror.InitI18n(); err != nil {
 		return nil, err
@@ -31,7 +30,20 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	database, err := NewDatabase(conf, logger)
+	if !conf.LogConf.IsProd {
+		w := os.Stderr
+		slog.SetDefault(slog.New(
+			tint.NewHandler(w, &tint.Options{
+				Level:      slog.LevelDebug,
+				TimeFormat: time.DateTime,
+			}),
+		))
+	} else {
+		logger := slog.NewJSONHandler(NewLumberjack(conf.LogConf), nil)
+		slog.SetDefault(slog.New(logger))
+	}
+
+	database, err := NewDatabase(conf)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +60,7 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
-	app := &Application{Database: database, Conf: conf, Log: logger, Rdb: rdb, Limiter: limit}
+	app := &Application{Database: database, Conf: conf, Rdb: rdb, Limiter: limit}
 	return app, nil
 }
 

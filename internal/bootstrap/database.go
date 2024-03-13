@@ -5,23 +5,32 @@ import (
 	"errors"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
-	"gin-app/pkg/slog"
+	"gin-app/pkg/sslog"
+	"log/slog"
 
 	"gin-app/internal/domain"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	gormgenerics "github.com/olongfen/gorm-generics"
 	"github.com/olongfen/gorm-generics/achieve"
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 // NewDatabase 新建数据库
-func NewDatabase(conf *Conf, logger *zap.Logger) (gormgenerics.Database, error) {
+func NewDatabase(conf *Conf) (gormgenerics.Database, error) {
+	var logger *slog.Logger
+	if conf.LogConf.IsProd {
+		c := conf.LogConf
+		c.LogPath = "log/db.log"
+		l := slog.NewJSONHandler(NewLumberjack(c), nil)
+		logger = slog.New(l)
+	} else {
+		logger = slog.Default()
+	}
 	dataBase, err := achieve.NewDataBase(conf.DBDriver, conf.DBDsn,
 		achieve.WithAutoMigrate(conf.DBAutoMigrate),
 		achieve.WithAutoMigrateDst([]any{&domain.User{}}),
-		achieve.WithLogger(slog.NewDBLog(logger)),
+		achieve.WithLogger(sslog.NewDBLog(logger)),
 		achieve.WithOpentracingPlugin(&achieve.OpentracingPlugin{}),
 		achieve.WithTranslateError(translateErr),
 	)

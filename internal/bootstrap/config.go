@@ -30,6 +30,17 @@ type Conf struct {
 	JWTSigningKey        string        `mapstructure:"JWT_SIGNING_KEY"`
 	JWTRefreshSingingKey string        `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
 	JWTEnabled           bool          `mapstructure:"JWT_ENABLED"`
+	// 日志
+	LogConf LumberjackConfig
+}
+
+type LumberjackConfig struct {
+	IsProd     bool
+	LogPath    string
+	MaxSize    int
+	MaxBackups int
+	MaxAge     int
+	Compress   bool
 }
 
 func NewConf(configPath string) (*Conf, error) {

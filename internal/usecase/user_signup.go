@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -184,7 +185,7 @@ func ParseToken(tokenString string, cla *Claims, key string) bool {
 	token, err := jwt.ParseWithClaims(tokenString, cla, jwtTokenKeyFunc([]byte(key)))
 	if err != nil {
 		if err != nil {
-			bootstrap.GlobalLog.Error("parseToken", zap.Error(err))
+			slog.Error("parseToken", err)
 		}
 		return false
 	}

@@ -16,7 +16,7 @@ func Setup(app *bootstrap.Application, timeout time.Duration, en *gin.Engine) {
 	en.Use(middleware.LimitRequestRate(app.Limiter))
 	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
-	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError(app.Log))
+	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError())
 	NewSignupCtl(app, timeout, publicRouter)
 	if app.Conf.JWTEnabled {
 		publicRouter.Use(middleware.HandlerAuth(app.Rdb))

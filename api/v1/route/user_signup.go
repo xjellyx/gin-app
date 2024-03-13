@@ -15,7 +15,6 @@ func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.
 	repo := repository.NewUserRepo(app.Database)
 	us := usecase.NewSignupUsecase(usecase.SignupUsecaseConfig{
 		Repo:           repo,
-		Log:            app.Log,
 		Cache:          app.Rdb,
 		ContextTimeout: timeout,
 	})

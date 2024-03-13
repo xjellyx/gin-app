@@ -8,6 +8,7 @@ import (
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
 	"github.com/ulule/limiter/v3"
+	"log/slog"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -20,11 +21,10 @@ import (
 	zh_translation "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/go-playground/validator/v10/translations/zh_tw"
 	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"
-	"go.uber.org/zap"
 )
 
 // HandlerError 错误统一处理
-func HandlerError(log *zap.Logger) gin.HandlerFunc {
+func HandlerError() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 
@@ -48,7 +48,7 @@ func HandlerError(log *zap.Logger) gin.HandlerFunc {
 				}
 				resp.Msg = translatedErrors.Error()
 			default:
-				log.Error("HandlerError | "+c.Request.RequestURI, zap.Error(last.Err))
+				slog.Error("HandlerError", "uri", c.Request.RequestURI, "err", c.Errors)
 				resp.Code = string(serror.ErrCodeInternalServerError)
 				resp.Msg = serror.Error(serror.ErrCodeInternalServerError, scontext.GetLanguage(c.Request.Context())).Error()
 			}
