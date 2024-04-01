@@ -8,7 +8,6 @@ import (
 
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
-	"gin-app/internal/infra/cache"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
 
@@ -23,7 +22,6 @@ type SignupUsecaseConfig struct {
 	Repo           domain.UserRepo
 	Log            *zap.Logger
 	ContextTimeout time.Duration
-	Cache          cache.Cache
 }
 
 type signupUsecase struct {
@@ -99,7 +97,7 @@ func (s *signupUsecase) SingIn(ctx context.Context, req *domain.SingInReq) (*dom
 			return nil, err
 		}
 	}
-	res, err := generateToken(ctx, s.cfg.Cache, &Claims{
+	res, err := generateToken(&Claims{
 		UserUuid: user.Uuid,
 		Username: user.Username,
 	})
@@ -113,7 +111,6 @@ func (s *signupUsecase) SingIn(ctx context.Context, req *domain.SingInReq) (*dom
 type Claims struct {
 	UserUuid string `json:"userUuid,omitempty"`
 	Username string `json:"username,omitempty"`
-	CacheKey string `json:"cacheKey,omitempty"`
 	jwt.RegisteredClaims
 }
 
@@ -146,23 +143,15 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 	return tokenString, nil
 }
 
-func generateToken(ctx context.Context, c cache.Cache, cla *Claims) (ret *domain.SingInResp, err error) {
+func generateToken(cla *Claims) (ret *domain.SingInResp, err error) {
 	cfg := bootstrap.GetConfig()
-	cla.CacheKey = cla.UserUuid
-	tokenString, err := createToken(cfg.JWTExpireTime*time.Minute, string([]byte(cfg.JWTSigningKey)), cla)
+	tokenString, err := createToken(time.Duration(cfg.JWTExpireTime)*time.Minute, string([]byte(cfg.JWTSigningKey)), cla)
 	if err != nil {
-		return nil, err
-	}
-	if err = c.Set(ctx, cla.CacheKey, tokenString, cfg.JWTExpireTime*time.Minute); err != nil {
 		return nil, err
 	}
 	refreshCla := *cla
-	refreshCla.CacheKey = cla.UserUuid + "_refresh_token"
-	refreshToken, err := createToken(cfg.JWTRefreshExpireTime*time.Minute, cfg.JWTRefreshSingingKey, &refreshCla)
+	refreshToken, err := createToken(time.Duration(cfg.JWTRefreshExpireTime)*time.Minute, cfg.JWTRefreshSingingKey, &refreshCla)
 	if err != nil {
-		return nil, err
-	}
-	if err = c.Set(ctx, refreshCla.CacheKey, refreshToken, cfg.JWTRefreshExpireTime*time.Minute); err != nil {
 		return nil, err
 	}
 

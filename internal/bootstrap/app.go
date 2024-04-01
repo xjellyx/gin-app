@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"github.com/lmittmann/tint"
 	"log/slog"
 	"os"
 	"time"
@@ -9,6 +8,8 @@ import (
 	"gin-app/internal/infra/cache"
 	"gin-app/pkg/serror"
 
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/lmittmann/tint"
 	gormgenerics "github.com/olongfen/gorm-generics"
 	"github.com/ulule/limiter/v3"
 )

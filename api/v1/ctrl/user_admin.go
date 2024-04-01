@@ -1,7 +1,12 @@
 package ctrl
 
 import (
+	"time"
+
+	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
+	"gin-app/internal/repository"
+	"gin-app/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,6 +14,15 @@ import (
 // UserAdminCtrl 管理员管理用户控制器
 type UserAdminCtrl struct {
 	Usecase domain.UserAdminUsecase
+}
+
+func NewAdminCtrl(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
+	ctl := &UserAdminCtrl{}
+	repo := repository.NewUserRepo(app.Database)
+	ctl.Usecase = usecase.NewUserAdminUsecase(usecase.UserAdminConfig{Repo: repo, ContextTimeout: timeout})
+	h := group.Group("/users")
+	h.GET("", ctl.GetUserList)
+	h.POST("", ctl.AddUser)
 }
 
 // GetUserList

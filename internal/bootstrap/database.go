@@ -12,7 +12,6 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 	gormgenerics "github.com/olongfen/gorm-generics"
-	"github.com/olongfen/gorm-generics/achieve"
 	"gorm.io/gorm"
 )
 
@@ -27,12 +26,12 @@ func NewDatabase(conf *Conf) (gormgenerics.Database, error) {
 	} else {
 		logger = slog.Default()
 	}
-	dataBase, err := achieve.NewDataBase(conf.DBDriver, conf.DBDsn,
-		achieve.WithAutoMigrate(conf.DBAutoMigrate),
-		achieve.WithAutoMigrateDst([]any{&domain.User{}}),
-		achieve.WithLogger(sslog.NewDBLog(logger)),
-		achieve.WithOpentracingPlugin(&achieve.OpentracingPlugin{}),
-		achieve.WithTranslateError(translateErr),
+	dataBase, err := gormgenerics.NewDataBase(conf.DBDriver, conf.DBDsn,
+		gormgenerics.WithAutoMigrate(conf.DBAutoMigrate),
+		gormgenerics.WithAutoMigrateDst([]any{&domain.User{}}),
+		gormgenerics.WithLogger(sslog.NewDBLog(logger)),
+		gormgenerics.WithOpentracingPlugin(&gormgenerics.OpentracingPlugin{}),
+		gormgenerics.WithTranslateError(translateErr),
 	)
 	if err != nil {
 		return nil, err
@@ -45,7 +44,7 @@ func translateErr(ctx context.Context, db *gorm.DB) (err error) {
 	lan := scontext.GetLanguage(ctx)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		switch db.Statement.Table {
-		case domain.User{}.TableName():
+		case "users":
 			return serror.Error(serror.ErrUserRecordNotFound, lan)
 		default:
 			return serror.Error(serror.ErrRecordNotFound, lan)
@@ -60,7 +59,7 @@ func translateErr(ctx context.Context, db *gorm.DB) (err error) {
 	switch errV.Code {
 	case "23505":
 		switch errV.TableName {
-		case domain.User{}.TableName():
+		case "users":
 			return domain.TranslateUserDBErr(errV, lan)
 		}
 	}

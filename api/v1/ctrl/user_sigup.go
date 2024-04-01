@@ -1,7 +1,12 @@
 package ctrl
 
 import (
+	"time"
+
+	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
+	"gin-app/internal/repository"
+	"gin-app/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,6 +14,19 @@ import (
 // UserSignupCtrl ctrl
 type UserSignupCtrl struct {
 	Usecase domain.SignupUsecase
+}
+
+func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
+	repo := repository.NewUserRepo(app.Database)
+	us := usecase.NewSignupUsecase(usecase.SignupUsecaseConfig{
+		Repo:           repo,
+		ContextTimeout: timeout,
+	})
+	sc := UserSignupCtrl{
+		Usecase: us,
+	}
+	group.POST("/signup", sc.Signup)
+	group.POST("/sing-in", sc.SingIn)
 }
 
 // Signup

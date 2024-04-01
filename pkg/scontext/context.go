@@ -37,3 +37,18 @@ func GetUserUuid(ctx context.Context) string {
 	}
 	return ""
 }
+
+type usernameCtxTfg struct{}
+
+// SetUsername 	set username to context
+func SetUsername(ctx context.Context, username string) context.Context {
+	return context.WithValue(ctx, usernameCtxTfg{}, username)
+}
+
+// GetUsername get username by context
+func GetUsername(ctx context.Context) string {
+	if val, ok := ctx.Value(usernameCtxTfg{}).(string); ok {
+		return val
+	}
+	return ""
+}

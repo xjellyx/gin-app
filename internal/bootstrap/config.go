@@ -1,14 +1,12 @@
 package bootstrap
 
 import (
-	"log"
-	"strings"
-	"time"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/olongfen/gorm-generics/achieve"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"log"
+	"strings"
 )
 
 // Conf 配置环境
@@ -24,12 +22,12 @@ type Conf struct {
 	RDBDB        int    `mapstructure:"RDB_DB"`
 	RDBKeyPrefix string `mapstructure:"RDB_KEY_PREFIX"`
 	//
-	JWTExpireTime        time.Duration `mapstructure:"JWT_EXPIRE_TIME"`
-	JWTRefreshExpireTime time.Duration `mapstructure:"JWT_REFRESH_EXPIRE_TIME"`
-	JWTSigningMethod     string        `mapstructure:"JWT_SIGNING_METHOD"`
-	JWTSigningKey        string        `mapstructure:"JWT_SIGNING_KEY"`
-	JWTRefreshSingingKey string        `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
-	JWTEnabled           bool          `mapstructure:"JWT_ENABLED"`
+	JWTExpireTime        uint   `mapstructure:"JWT_EXPIRE_TIME"`
+	JWTRefreshExpireTime uint   `mapstructure:"JWT_REFRESH_EXPIRE_TIME"`
+	JWTSigningMethod     string `mapstructure:"JWT_SIGNING_METHOD"`
+	JWTSigningKey        string `mapstructure:"JWT_SIGNING_KEY"`
+	JWTRefreshSingingKey string `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
+	JWTEnabled           bool   `mapstructure:"JWT_ENABLED"`
 	// 日志
 	LogConf LumberjackConfig
 }
@@ -46,7 +44,6 @@ type LumberjackConfig struct {
 func NewConf(configPath string) (*Conf, error) {
 	// 设置默认值
 	viper.SetDefault("HTTP_PORT", 8080)
-
 	// 读取环境变量
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))

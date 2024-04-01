@@ -38,10 +38,6 @@ type User struct {
 	Phone    string     `gorm:"size:255;default:null;uniqueIndex;comment:phone"`
 }
 
-func (s User) TableName() string {
-	return "users"
-}
-
 // UserRepo user repository
 type UserRepo interface {
 	gormgenerics.BasicRepo[User]

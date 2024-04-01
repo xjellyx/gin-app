@@ -3,6 +3,7 @@ package route
 import (
 	"time"
 
+	"gin-app/api/v1/ctrl"
 	"gin-app/api/v1/middleware"
 	_ "gin-app/docs"
 	"gin-app/internal/bootstrap"
@@ -17,10 +18,10 @@ func Setup(app *bootstrap.Application, timeout time.Duration, en *gin.Engine) {
 	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError())
-	NewSignupCtl(app, timeout, publicRouter)
+	ctrl.NewSignupCtl(app, timeout, publicRouter)
 	if app.Conf.JWTEnabled {
-		publicRouter.Use(middleware.HandlerAuth(app.Rdb))
+		publicRouter.Use(middleware.HandlerAuth())
 	}
-	NewUserHimSelfCtrl(app, timeout, publicRouter)
-	NewAdminCtrl(app, timeout, publicRouter)
+	ctrl.NewUserHimSelfCtrl(app, timeout, publicRouter)
+	ctrl.NewAdminCtrl(app, timeout, publicRouter)
 }
