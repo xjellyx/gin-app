@@ -127,7 +127,7 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 	var (
 		signingMethod jwt.SigningMethod
 	)
-	switch strings.ToLower(cfg.JWTSigningMethod) {
+	switch strings.ToLower(cfg.JWT.SigningMethod) {
 	case "hs384":
 		signingMethod = jwt.SigningMethodHS384
 	case "hs256":
@@ -145,12 +145,12 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 
 func generateToken(cla *Claims) (ret *domain.SingInResp, err error) {
 	cfg := bootstrap.GetConfig()
-	tokenString, err := createToken(time.Duration(cfg.JWTExpireTime)*time.Minute, string([]byte(cfg.JWTSigningKey)), cla)
+	tokenString, err := createToken(time.Duration(cfg.JWT.ExpireTime)*time.Minute, string([]byte(cfg.JWT.SigningKey)), cla)
 	if err != nil {
 		return nil, err
 	}
 	refreshCla := *cla
-	refreshToken, err := createToken(time.Duration(cfg.JWTRefreshExpireTime)*time.Minute, cfg.JWTRefreshSingingKey, &refreshCla)
+	refreshToken, err := createToken(time.Duration(cfg.JWT.RefreshExpireTime)*time.Minute, cfg.JWT.RefreshSingingKey, &refreshCla)
 	if err != nil {
 		return nil, err
 	}

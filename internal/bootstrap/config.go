@@ -1,35 +1,51 @@
 package bootstrap
 
 import (
-	"github.com/fsnotify/fsnotify"
-	"github.com/olongfen/gorm-generics/achieve"
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
+	"fmt"
 	"log"
 	"strings"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 // Conf 配置环境
 type Conf struct {
 	HTTPort uint `mapstructure:"HTTP_PORT"`
 	//
-	DBDriver      achieve.DriverName `mapstructure:"DB_DRIVER"`
-	DBDsn         string             `mapstructure:"DB_DSN"`
-	DBAutoMigrate bool               `mapstructure:"DB_AUTO_MIGRATE"`
+	DB  DBCfg  `mapstructure:"db"`
+	RDB RDBCfg `mapstructrue:"rdb"`
 	//
-	RDBAddr      string `mapstructure:"RDB_ADDR"`
-	RDBPassword  string `mapstructure:"RDB_PASSWORD"`
-	RDBDB        int    `mapstructure:"RDB_DB"`
-	RDBKeyPrefix string `mapstructure:"RDB_KEY_PREFIX"`
+	JWT JWTCfg `mapstructure:"jwt"`
 	//
-	JWTExpireTime        uint   `mapstructure:"JWT_EXPIRE_TIME"`
-	JWTRefreshExpireTime uint   `mapstructure:"JWT_REFRESH_EXPIRE_TIME"`
-	JWTSigningMethod     string `mapstructure:"JWT_SIGNING_METHOD"`
-	JWTSigningKey        string `mapstructure:"JWT_SIGNING_KEY"`
-	JWTRefreshSingingKey string `mapstructure:"JWT_REFRESH_SIGNING_KEY"`
-	JWTEnabled           bool   `mapstructure:"JWT_ENABLED"`
+	Resource string `mapstructure:"RESOURCE"`
 	// 日志
 	LogConf LumberjackConfig
+	Nacos   NacosCfg `mapstructure:"NACOS"`
+}
+
+type DBCfg struct {
+	Driver      string `mapstructure:"driver"`
+	Dsn         string `mapstructure:"dsn"`
+	AutoMigrate bool   `mapstructure:"auto_migrate"`
+	Prefix      string `mapstructure:"prefix"`
+}
+
+type RDBCfg struct {
+	Addr     string `mapstructure:"addr"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+	Prefix   string `mapstructure:"prefix"`
+}
+
+type JWTCfg struct {
+	ExpireTime        uint   `mapstructure:"expire_time"`
+	RefreshExpireTime uint   `mapstructure:"refresh_expire_time"`
+	SigningMethod     string `mapstructure:"signing_method"`
+	SigningKey        string `mapstructure:"signing_key"`
+	RefreshSingingKey string `mapstructure:"refresh_singing_key"`
+	Enabled           bool   `mapstructure:"enabled"`
 }
 
 type LumberjackConfig struct {
@@ -41,9 +57,20 @@ type LumberjackConfig struct {
 	Compress   bool
 }
 
+type NacosCfg struct {
+	IP           string  `mapstructure:"ip"`
+	Port         uint64  `mapstructure:"port"`
+	ClientName   string  `mapstructure:"client_name"`
+	ClientIP     string  `mapstructure:"client_ip"`
+	ClientPort   uint64  `mapstructure:"client_port"`
+	ClientWeight float64 `mapstructure:"client_weight"`
+}
+
 func NewConf(configPath string) (*Conf, error) {
 	// 设置默认值
 	viper.SetDefault("HTTP_PORT", 8080)
+	viper.SetDefault("RESOURCE", "resource")
+
 	// 读取环境变量
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
@@ -67,6 +94,7 @@ func NewConf(configPath string) (*Conf, error) {
 		}
 	})
 	GlobalConf = conf
+	fmt.Println("aaaaaaaa", conf.Nacos, conf.DB)
 	return conf, nil
 }
 

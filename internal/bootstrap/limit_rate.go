@@ -13,9 +13,9 @@ func NewLimitRate(cfg *Conf) (*limiter.Limiter, error) {
 		return nil, err
 	}
 	cli := redis.NewClient(&redis.Options{
-		Addr:     cfg.RDBAddr,
-		DB:       cfg.RDBDB + 1,
-		Password: cfg.RDBPassword,
+		Addr:     cfg.RDB.Addr,
+		DB:       cfg.RDB.DB + 1,
+		Password: cfg.RDB.Password,
 	})
 	store, err := sredis.NewStoreWithOptions(cli, limiter.StoreOptions{
 		Prefix:   "limiter_gin_example",

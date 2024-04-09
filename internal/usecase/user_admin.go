@@ -7,7 +7,6 @@ import (
 	"gin-app/internal/domain"
 
 	"github.com/google/uuid"
-	gormgenerics "github.com/olongfen/gorm-generics"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm/clause"
 )
@@ -34,11 +33,7 @@ func NewUserAdminUsecase(cfg UserAdminConfig) domain.UserAdminUsecase {
 func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListReq) (*domain.UserAdminListResp, error) {
 	ctx, cancelFunc := context.WithTimeout(ctx, u.cfg.ContextTimeout)
 	defer cancelFunc()
-	data, total, err := u.cfg.Repo.Find(ctx, &gormgenerics.Limit{
-		PageNum:  req.PageNum,
-		PageSize: req.PageSize,
-		Count:    true,
-	}, clause.OrderBy{
+	data, err := u.cfg.Repo.Find(ctx, clause.OrderBy{
 		Columns: []clause.OrderByColumn{
 			{Column: clause.Column{Name: "created_at"}, Desc: true},
 		},
@@ -48,9 +43,12 @@ func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListRe
 	}
 	ret := &domain.UserAdminListResp{}
 	ret.Pagination = &domain.Pagination{
-		Total:    total,
 		PageSize: req.PageSize,
 		PageNum:  req.PageNum,
+	}
+	ret.Pagination.Total, err = u.cfg.Repo.Count(ctx)
+	if err != nil {
+		return nil, err
 	}
 	for _, v := range data {
 		ret.List = append(ret.List, &domain.UserListInfo{

@@ -49,10 +49,10 @@ func App(confPath string) (*Application, error) {
 		return nil, err
 	}
 	rdb, err := cache.NewRDB(cache.Config{
-		Addr:      conf.RDBAddr,
-		DB:        conf.RDBDB,
-		Password:  conf.RDBPassword,
-		KeyPrefix: conf.RDBKeyPrefix,
+		Addr:      conf.RDB.Addr,
+		DB:        conf.RDB.DB,
+		Password:  conf.RDB.Password,
+		KeyPrefix: conf.RDB.Prefix,
 	})
 	if err != nil {
 		return nil, err

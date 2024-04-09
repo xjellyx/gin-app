@@ -26,12 +26,13 @@ func NewDatabase(conf *Conf) (gormgenerics.Database, error) {
 	} else {
 		logger = slog.Default()
 	}
-	dataBase, err := gormgenerics.NewDataBase(conf.DBDriver, conf.DBDsn,
-		gormgenerics.WithAutoMigrate(conf.DBAutoMigrate),
+	dataBase, err := gormgenerics.NewDataBase(gormgenerics.DriverName(conf.DB.Driver), conf.DB.Dsn,
+		gormgenerics.WithAutoMigrate(conf.DB.AutoMigrate),
 		gormgenerics.WithAutoMigrateDst([]any{&domain.User{}}),
 		gormgenerics.WithLogger(sslog.NewDBLog(logger)),
 		gormgenerics.WithOpentracingPlugin(&gormgenerics.OpentracingPlugin{}),
 		gormgenerics.WithTranslateError(translateErr),
+		gormgenerics.WithTablePrefix(conf.DB.Prefix),
 	)
 	if err != nil {
 		return nil, err

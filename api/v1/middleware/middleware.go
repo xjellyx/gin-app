@@ -116,7 +116,7 @@ func HandlerAuth() gin.HandlerFunc {
 			return
 		}
 		cla := usecase.Claims{}
-		if !usecase.ParseToken(token, &cla, bootstrap.GetConfig().JWTSigningKey) {
+		if !usecase.ParseToken(token, &cla, bootstrap.GetConfig().JWT.SigningKey) {
 			ctx.AbortWithStatusJSON(401, gin.H{
 				"code": serror.ErrUnauthorized,
 				"msg":  msg,
