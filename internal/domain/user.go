@@ -6,7 +6,7 @@ import (
 	"gin-app/pkg/serror"
 
 	"github.com/jackc/pgx/v5/pgconn"
-	gormgenerics "github.com/olongfen/gorm-generics"
+	gormgenerics "github.com/xjellyx/gorm-generics"
 	"gorm.io/gorm"
 )
 

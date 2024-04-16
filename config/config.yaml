@@ -1,7 +1,7 @@
 HTTP_PORT: 8888
 db:
   driver: "postgresql"
-  dsn: "postgres://postgres:123456@localhost:5432/test?sslmode=disable&TimeZone=Asia/Shanghai"
+  dsn: "postgres://postgres:123456@localhost:5432/demo?sslmode=disable&TimeZone=Asia/Shanghai"
   auto_migrate: true
   prefix:  ""
 # redis 连接数据

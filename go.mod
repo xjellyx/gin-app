@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0
+	github.com/gin-contrib/cors v1.7.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
@@ -14,7 +15,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lmittmann/tint v1.0.4
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
-	github.com/olongfen/gorm-generics v1.0.1
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.0.4
 	github.com/spf13/pflag v1.0.5
@@ -23,6 +23,7 @@ require (
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.1
 	github.com/ulule/limiter/v3 v3.11.2
+	github.com/xjellyx/gorm-generics v1.0.2
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.21.0
 	golang.org/x/text v0.14.0
@@ -39,7 +40,6 @@ require (
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/gin-contrib/cors v1.7.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

@@ -3,7 +3,7 @@ package repository
 import (
 	"gin-app/internal/domain"
 
-	gormgenerics "github.com/olongfen/gorm-generics"
+	gormgenerics "github.com/xjellyx/gorm-generics"
 )
 
 // userRepo 学生存储库实现
