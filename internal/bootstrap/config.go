@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -94,7 +93,6 @@ func NewConf(configPath string) (*Conf, error) {
 		}
 	})
 	GlobalConf = conf
-	fmt.Println("aaaaaaaa", conf.Nacos, conf.DB)
 	return conf, nil
 }
 

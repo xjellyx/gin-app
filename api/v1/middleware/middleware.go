@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"log/slog"
+	"strings"
 	"time"
 
 	"gin-app/internal/bootstrap"
@@ -114,6 +115,9 @@ func HandlerAuth() gin.HandlerFunc {
 				"msg":  msg,
 			})
 			return
+		}
+		if strings.Contains(token, "Bearer ") {
+			token = token[7:]
 		}
 		cla := usecase.Claims{}
 		if !usecase.ParseToken(token, &cla, bootstrap.GetConfig().JWT.SigningKey) {

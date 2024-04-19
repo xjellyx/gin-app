@@ -64,12 +64,12 @@ func (u *UserSignupCtrl) Signup(c *gin.Context) {
 // @Summary 用户登入
 // @Version 1.0
 // @Produce application/json
-// @Param {} body domain.SingInReq true "body"
+// @Param {} body domain.SignInReq true "body"
 // @Router /api/v1/sing-in [post]
 // @Success 200 {object} domain.Response
 // @Security ApiKeyAuth
 func (u *UserSignupCtrl) SingIn(c *gin.Context) {
-	var req domain.SingInReq
+	var req domain.SignInReq
 	var err error
 	defer func() {
 		if err != nil {
@@ -80,7 +80,7 @@ func (u *UserSignupCtrl) SingIn(c *gin.Context) {
 	if err = c.ShouldBindJSON(&req); err != nil {
 		return
 	}
-	res, err := u.Usecase.SingIn(c.Request.Context(), &req)
+	res, err := u.Usecase.SignIn(c.Request.Context(), &req)
 	if err != nil {
 		return
 	}

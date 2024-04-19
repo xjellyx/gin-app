@@ -55,8 +55,8 @@ func (s *signupUsecase) Signup(ctx context.Context, req *domain.SignupReq) error
 	return nil
 }
 
-// SingIn 登入
-func (s *signupUsecase) SingIn(ctx context.Context, req *domain.SingInReq) (*domain.SingInResp, error) {
+// SignIn 登入
+func (s *signupUsecase) SignIn(ctx context.Context, req *domain.SignInReq) (*domain.SignInResp, error) {
 	ctx, cancel := context.WithTimeout(ctx, s.cfg.ContextTimeout)
 	defer cancel()
 	var cond clause.Eq
@@ -143,7 +143,7 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 	return tokenString, nil
 }
 
-func generateToken(cla *Claims) (ret *domain.SingInResp, err error) {
+func generateToken(cla *Claims) (ret *domain.SignInResp, err error) {
 	cfg := bootstrap.GetConfig()
 	tokenString, err := createToken(time.Duration(cfg.JWT.ExpireTime)*time.Minute, string([]byte(cfg.JWT.SigningKey)), cla)
 	if err != nil {
@@ -155,7 +155,7 @@ func generateToken(cla *Claims) (ret *domain.SingInResp, err error) {
 		return nil, err
 	}
 
-	tokenInfo := &domain.SingInResp{
+	tokenInfo := &domain.SignInResp{
 		AccessToken:  tokenString,
 		RefreshToken: refreshToken,
 		ExpiresAt:    cla.ExpiresAt.Time,
