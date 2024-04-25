@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
+	"gin-app/api/v1/route"
+	"gin-app/internal/bootstrap"
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
-	"gin-app/api/v1/route"
-	"gin-app/internal/bootstrap"
-
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
 )
 
@@ -22,12 +21,15 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer app.Close()
-	g := gin.Default()
-	route.Setup(app, time.Second*3, g)
-	_ = g.Run(fmt.Sprintf(`:%v`, app.Conf.HTTPort))
-
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		route.Setup(app, time.Second*3)
+		wg.Done()
+	}()
+	wg.Wait()
 	sigterm := make(chan os.Signal, 1)
-	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGTERM, syscall.SIGQUIT)
 	go func() {
 		<-sigterm
 	}()

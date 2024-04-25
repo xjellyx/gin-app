@@ -1,6 +1,7 @@
 package route
 
 import (
+	"fmt"
 	"time"
 
 	"gin-app/api/v1/ctrl"
@@ -13,7 +14,8 @@ import (
 	ginswagger "github.com/swaggo/gin-swagger"
 )
 
-func Setup(app *bootstrap.Application, timeout time.Duration, en *gin.Engine) {
+func Setup(app *bootstrap.Application, timeout time.Duration) {
+	en := gin.Default()
 	en.Use(middleware.LimitRequestRate(app.Limiter))
 	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
@@ -24,4 +26,5 @@ func Setup(app *bootstrap.Application, timeout time.Duration, en *gin.Engine) {
 	}
 	ctrl.NewUserHimSelfCtrl(app, timeout, publicRouter)
 	ctrl.NewAdminCtrl(app, timeout, publicRouter)
+	_ = en.Run(fmt.Sprintf(`:%v`, app.Conf.HTTPort))
 }
