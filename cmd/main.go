@@ -1,16 +1,18 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
-	"gin-app/api/v1/route"
-	"gin-app/internal/bootstrap"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 	"time"
 
+	"gin-app/api/v1/route"
+	"gin-app/internal/bootstrap"
 	"github.com/spf13/pflag"
 )
 
@@ -21,19 +23,23 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer app.Close()
-	var wg sync.WaitGroup
-	wg.Add(1)
+	srv := route.Setup(app, time.Second*3)
 	go func() {
-		route.Setup(app, time.Second*3)
-		wg.Done()
+		log.Println("Server is running on port:", app.Conf.HTTPort)
+		if err = srv.ListenAndServe(); err != nil && !errors.Is(http.ErrServerClosed, err) {
+			log.Fatalf("listen: %s\n", err)
+		}
 	}()
-	wg.Wait()
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGTERM, syscall.SIGQUIT)
-	go func() {
-		<-sigterm
-	}()
-
+	<-sigterm
+	log.Println("Shutdown Server ...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err = srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	log.Println("Server exiting")
 }
 
 var (

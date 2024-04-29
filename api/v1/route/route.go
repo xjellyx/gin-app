@@ -2,6 +2,7 @@ package route
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
 	"gin-app/api/v1/ctrl"
@@ -14,7 +15,7 @@ import (
 	ginswagger "github.com/swaggo/gin-swagger"
 )
 
-func Setup(app *bootstrap.Application, timeout time.Duration) {
+func Setup(app *bootstrap.Application, timeout time.Duration) *http.Server {
 	en := gin.Default()
 	en.Use(middleware.LimitRequestRate(app.Limiter))
 	publicRouter := en.Group("/api/v1")
@@ -26,5 +27,9 @@ func Setup(app *bootstrap.Application, timeout time.Duration) {
 	}
 	ctrl.NewUserHimSelfCtrl(app, timeout, publicRouter)
 	ctrl.NewAdminCtrl(app, timeout, publicRouter)
-	_ = en.Run(fmt.Sprintf(`:%v`, app.Conf.HTTPort))
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(`:%v`, app.Conf.HTTPort),
+		Handler: en,
+	}
+	return srv
 }
