@@ -3,39 +3,24 @@ package domain
 import (
 	"strings"
 
-	"gin-app/pkg/serror"
+	"gin-app/internal/domain/types"
 
+	"gin-app/pkg/serror"
 	"github.com/jackc/pgx/v5/pgconn"
 	gormgenerics "github.com/xjellyx/gorm-generics"
 	"gorm.io/gorm"
 )
 
-type UserGender uint // user gender
-const (
-	GenderUnknown UserGender = iota + 1
-	GenderMale               // male
-	GenderFemale             // female
-)
-
-type UserStatus uint // user status
-const (
-	StatusNormal  UserStatus = iota + 1 // 正常
-	StatusLocked                        // 锁定
-	StatusFreeze                        // 冻结
-	StatusDeleted                       // deleted
-
-)
-
 // User 学生表模型
 type User struct {
 	gorm.Model
-	Uuid     string     `gorm:"size:36;uniqueIndex;default:null;comment:用户uuid"`
-	Username string     `gorm:"size:255;uniqueIndex;default:null;comment:name"`
-	Email    string     `gorm:"size:255;uniqueIndex;default:null;comment:email"`
-	Password string     `gorm:"size:255;comment:password"`
-	Gender   UserGender `gorm:"default:1;comment:gender,1:unknown,2:male,3:female"`
-	Status   UserStatus `gorm:"default:1;comment:status,1:normal,2:锁定,3:冻结,4:deleted"`
-	Phone    string     `gorm:"size:255;default:null;uniqueIndex;comment:phone"`
+	Uuid     string           `gorm:"size:36;uniqueIndex;default:null;comment:用户uuid"`
+	Username string           `gorm:"size:255;uniqueIndex;default:null;comment:name"`
+	Email    string           `gorm:"size:255;uniqueIndex;default:null;comment:email"`
+	Password string           `gorm:"size:255;comment:password"`
+	Gender   types.UserGender `gorm:"default:1;comment:gender,1:unknown,2:male,3:female"`
+	Status   types.UserStatus `gorm:"default:1;comment:status,1:normal,2:锁定,3:冻结,4:deleted"`
+	Phone    string           `gorm:"size:255;default:null;uniqueIndex;comment:phone"`
 }
 
 // UserRepo user repository

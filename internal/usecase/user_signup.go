@@ -2,6 +2,9 @@ package usecase
 
 import (
 	"context"
+	"gin-app/internal/domain/request"
+	"gin-app/internal/domain/response"
+	"gin-app/internal/domain/types"
 	"log/slog"
 	"strings"
 	"time"
@@ -35,7 +38,7 @@ func NewSignupUsecase(cfg SignupUsecaseConfig) domain.SignupUsecase {
 }
 
 // Signup 注册
-func (s *signupUsecase) Signup(ctx context.Context, req *domain.SignupReq) error {
+func (s *signupUsecase) Signup(ctx context.Context, req *request.SignupReq) error {
 	ctx, cancel := context.WithTimeout(ctx, s.cfg.ContextTimeout)
 	defer cancel()
 	user := &domain.User{
@@ -56,7 +59,7 @@ func (s *signupUsecase) Signup(ctx context.Context, req *domain.SignupReq) error
 }
 
 // SignIn 登入
-func (s *signupUsecase) SignIn(ctx context.Context, req *domain.SignInReq) (*domain.SignInResp, error) {
+func (s *signupUsecase) SignIn(ctx context.Context, req *request.SignInReq) (*response.SignInResp, error) {
 	ctx, cancel := context.WithTimeout(ctx, s.cfg.ContextTimeout)
 	defer cancel()
 	var cond clause.Eq
@@ -81,15 +84,15 @@ func (s *signupUsecase) SignIn(ctx context.Context, req *domain.SignInReq) (*dom
 	}
 	lan := scontext.GetLanguage(ctx)
 	// 判断用户的状态
-	if user.Status != domain.StatusNormal {
+	if user.Status != types.StatusNormal {
 		switch user.Status {
-		case domain.StatusLocked:
+		case types.StatusLocked:
 			err = serror.Error(serror.ErrUserInactivate, lan)
 			return nil, err
-		case domain.StatusDeleted:
+		case types.StatusDeleted:
 			err = serror.Error(serror.ErrUserDeleted, lan)
 			return nil, err
-		case domain.StatusFreeze:
+		case types.StatusFreeze:
 			err = serror.Error(serror.ErrUserFreeze, lan)
 			return nil, err
 		default:
@@ -143,7 +146,7 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 	return tokenString, nil
 }
 
-func generateToken(cla *Claims) (ret *domain.SignInResp, err error) {
+func generateToken(cla *Claims) (ret *response.SignInResp, err error) {
 	cfg := bootstrap.GetConfig()
 	tokenString, err := createToken(time.Duration(cfg.JWT.ExpireTime)*time.Minute, string([]byte(cfg.JWT.SigningKey)), cla)
 	if err != nil {
@@ -155,7 +158,7 @@ func generateToken(cla *Claims) (ret *domain.SignInResp, err error) {
 		return nil, err
 	}
 
-	tokenInfo := &domain.SignInResp{
+	tokenInfo := &response.SignInResp{
 		AccessToken:  tokenString,
 		RefreshToken: refreshToken,
 		ExpiresAt:    cla.ExpiresAt.Time,

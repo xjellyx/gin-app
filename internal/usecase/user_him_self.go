@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"gin-app/internal/domain/response"
 	"time"
 
 	"gin-app/internal/domain"
@@ -23,7 +24,7 @@ func NewUserHimSelfUsecase(cfg UserHimSelfUsecaseConfig) domain.UserHimSelfUseca
 	return &userHimSelfUsecase{cfg: cfg}
 }
 
-func (u *userHimSelfUsecase) Info(ctx context.Context) (*domain.UserInfo, error) {
+func (u *userHimSelfUsecase) Info(ctx context.Context) (*response.UserInfo, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.cfg.ContextTimeout)
 	defer cancel()
 	uid := scontext.GetUserUuid(ctx)
@@ -35,7 +36,7 @@ func (u *userHimSelfUsecase) Info(ctx context.Context) (*domain.UserInfo, error)
 	if err != nil {
 		return nil, err
 	}
-	data := &domain.UserInfo{
+	data := &response.UserInfo{
 		Username:  ret.Username,
 		Email:     ret.Email,
 		Phone:     ret.Phone,

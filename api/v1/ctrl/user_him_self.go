@@ -29,7 +29,7 @@ func NewUserHimSelfCtrl(app *bootstrap.Application, timeout time.Duration, group
 // @Version 1.0
 // @Produce application/json
 // @Router /api/v1/user/info [get]
-// @Success 200 {object} domain.Response{data=domain.UserInfo}
+// @Success 200 {object} response.Response{data=response.UserInfo}
 // @Security ApiKeyAuth
 func (u *UserHimSelfCtrl) GetUserInfo(c *gin.Context) {
 

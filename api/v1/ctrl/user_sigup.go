@@ -1,6 +1,7 @@
 package ctrl
 
 import (
+	"gin-app/internal/domain/request"
 	"time"
 
 	"gin-app/internal/bootstrap"
@@ -34,12 +35,12 @@ func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.
 // @Summary 用户注册
 // @Version 1.0
 // @Produce application/json
-// @Param {} body domain.SignupReq true "body"
+// @Param {} body request.SignupReq true "body"
 // @Router /api/v1/signup [post]
-// @Success 200 {object} domain.Response
+// @Success 200 {object} response.Response
 // @Security ApiKeyAuth
 func (u *UserSignupCtrl) Signup(c *gin.Context) {
-	var req domain.SignupReq
+	var req request.SignupReq
 	var err error
 	defer func() {
 		if err != nil {
@@ -64,12 +65,12 @@ func (u *UserSignupCtrl) Signup(c *gin.Context) {
 // @Summary 用户登入
 // @Version 1.0
 // @Produce application/json
-// @Param {} body domain.SignInReq true "body"
+// @Param {} body request.SignInReq true "body"
 // @Router /api/v1/sing-in [post]
-// @Success 200 {object} domain.Response
+// @Success 200 {object} response.Response{data=response.SignInResp}
 // @Security ApiKeyAuth
 func (u *UserSignupCtrl) SingIn(c *gin.Context) {
-	var req domain.SignInReq
+	var req request.SignInReq
 	var err error
 	defer func() {
 		if err != nil {

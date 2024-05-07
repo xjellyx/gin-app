@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"gin-app/internal/domain/request"
+	"gin-app/internal/domain/response"
 	"time"
 
 	"gin-app/internal/domain"
@@ -30,7 +32,7 @@ func NewUserAdminUsecase(cfg UserAdminConfig) domain.UserAdminUsecase {
 }
 
 // List 获取用户列表
-func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListReq) (*domain.UserAdminListResp, error) {
+func (u *userAdminUsecase) List(ctx context.Context, req *request.UserAdminListReq) (*response.UserAdminListResp, error) {
 	ctx, cancelFunc := context.WithTimeout(ctx, u.cfg.ContextTimeout)
 	defer cancelFunc()
 	data, err := u.cfg.Repo.Find(ctx, clause.OrderBy{
@@ -41,8 +43,8 @@ func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListRe
 	if err != nil {
 		return nil, err
 	}
-	ret := &domain.UserAdminListResp{}
-	ret.Pagination = &domain.Pagination{
+	ret := &response.UserAdminListResp{}
+	ret.Pagination = &response.Pagination{
 		PageSize: req.PageSize,
 		PageNum:  req.PageNum,
 	}
@@ -51,11 +53,11 @@ func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListRe
 		return nil, err
 	}
 	for _, v := range data {
-		ret.List = append(ret.List, &domain.UserListInfo{
+		ret.List = append(ret.List, &response.UserListInfo{
 			ID:     v.ID,
 			Uuid:   v.Uuid,
 			Status: v.Status,
-			UserInfo: domain.UserInfo{
+			UserInfo: response.UserInfo{
 				Gender:    v.Gender,
 				Email:     v.Email,
 				Username:  v.Username,
@@ -68,7 +70,7 @@ func (u *userAdminUsecase) List(ctx context.Context, req *domain.UserAdminListRe
 }
 
 // Add 添加用户
-func (u *userAdminUsecase) Add(ctx context.Context, req *domain.UserAdminAddReq) error {
+func (u *userAdminUsecase) Add(ctx context.Context, req *request.UserAdminAddReq) error {
 	ctx, cancelFunc := context.WithTimeout(ctx, u.cfg.ContextTimeout)
 	defer cancelFunc()
 	user := &domain.User{

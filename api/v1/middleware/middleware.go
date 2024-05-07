@@ -3,13 +3,13 @@ package middleware
 import (
 	"bytes"
 	"errors"
+	"gin-app/internal/domain/response"
 	"io"
 	"log/slog"
 	"strings"
 	"time"
 
 	"gin-app/internal/bootstrap"
-	"gin-app/internal/domain"
 	"gin-app/internal/usecase"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
@@ -35,7 +35,7 @@ func HandlerError() gin.HandlerFunc {
 		c.Next()
 
 		if c.Errors != nil {
-			resp := domain.Response{
+			resp := response.Response{
 				Code: "FAIL",
 				Data: nil,
 			}

@@ -1,6 +1,7 @@
 package ctrl
 
 import (
+	"gin-app/internal/domain/request"
 	"time"
 
 	"gin-app/internal/bootstrap"
@@ -29,14 +30,15 @@ func NewAdminCtrl(app *bootstrap.Application, timeout time.Duration, group *gin.
 // @Tags UserAdminCtrl
 // @Summary 用户列表
 // @Version 1.0
+// @Param req query request.UserAdminListReq true "查询参数"
 // @Produce application/json
 // @Router /api/v1/users [get]
-// @Success 200 {object} domain.Response{data=domain.UserAdminListResp}
+// @Success 200 {object} response.Response{data=response.UserAdminListResp}
 // @Security ApiKeyAuth
 func (u *UserAdminCtrl) GetUserList(c *gin.Context) {
 	var (
 		err error
-		req domain.UserAdminListReq
+		req request.UserAdminListReq
 	)
 	defer func() {
 		if err != nil {
@@ -60,13 +62,14 @@ func (u *UserAdminCtrl) GetUserList(c *gin.Context) {
 // @Summary 添加用户
 // @Version 1.0
 // @Produce application/json
+// @Param req body request.UserAdminAddReq true "添加用户"
 // @Router /api/v1/users [post]
-// @Success 200 {object} domain.Response
+// @Success 200 {object} response.Response{}
 // @Security ApiKeyAuth
 func (u *UserAdminCtrl) AddUser(c *gin.Context) {
 	var (
 		err error
-		req domain.UserAdminAddReq
+		req request.UserAdminAddReq
 	)
 	defer func() {
 		if err != nil {
