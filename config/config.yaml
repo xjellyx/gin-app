@@ -17,6 +17,7 @@ jwt:
   signing_method: "hs512"
   signing_key: "hellokey"
   refresh_signing_key: "hellokey"
+  enable: false
 logconf: # 日志配置
   isprod: false  # false,终端输出日志，true,输出到文件
 # nacos

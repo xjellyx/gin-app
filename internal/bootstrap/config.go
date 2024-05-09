@@ -14,7 +14,7 @@ type Conf struct {
 	HTTPort uint `mapstructure:"HTTP_PORT"`
 	//
 	DB  DBCfg  `mapstructure:"db"`
-	RDB RDBCfg `mapstructrue:"rdb"`
+	RDB RDBCfg `mapstructure:"rdb"`
 	//
 	JWT JWTCfg `mapstructure:"jwt"`
 	//
@@ -44,7 +44,7 @@ type JWTCfg struct {
 	SigningMethod     string `mapstructure:"signing_method"`
 	SigningKey        string `mapstructure:"signing_key"`
 	RefreshSingingKey string `mapstructure:"refresh_singing_key"`
-	Enabled           bool   `mapstructure:"enabled"`
+	Enable            bool   `mapstructure:"enable"`
 }
 
 type LumberjackConfig struct {

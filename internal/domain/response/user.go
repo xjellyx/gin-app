@@ -29,7 +29,7 @@ type UserAdminListResp struct {
 
 // SignInResp 用户登录响应
 type SignInResp struct {
-	AccessToken  string    `json:"accessToken"`
+	Token        string    `json:"token"`
 	ExpiresAt    time.Time `json:"expiresAt"`
 	RefreshToken string    `json:"refreshToken"`
 }

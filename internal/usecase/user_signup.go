@@ -79,7 +79,7 @@ func (s *signupUsecase) SignIn(ctx context.Context, req *request.SignInReq) (*re
 	if err != nil {
 		return nil, err
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		return nil, err
 	}
 	lan := scontext.GetLanguage(ctx)
@@ -159,7 +159,7 @@ func generateToken(cla *Claims) (ret *response.SignInResp, err error) {
 	}
 
 	tokenInfo := &response.SignInResp{
-		AccessToken:  tokenString,
+		Token:        tokenString,
 		RefreshToken: refreshToken,
 		ExpiresAt:    cla.ExpiresAt.Time,
 	}

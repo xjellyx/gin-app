@@ -34,7 +34,7 @@ func HandlerError() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 
-		if c.Errors != nil {
+		if c.Errors != nil && len(c.Errors) > 0 {
 			resp := response.Response{
 				Code: "FAIL",
 				Data: nil,

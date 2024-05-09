@@ -21,8 +21,8 @@ func Setup(app *bootstrap.Application, timeout time.Duration) *http.Server {
 	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError())
-	ctrl.NewSignupCtl(app, timeout, publicRouter)
-	if app.Conf.JWT.Enabled {
+	ctrl.NewUserSignCtl(app, timeout, publicRouter)
+	if app.Conf.JWT.Enable {
 		publicRouter.Use(middleware.HandlerAuth())
 	}
 	ctrl.NewUserHimSelfCtrl(app, timeout, publicRouter)

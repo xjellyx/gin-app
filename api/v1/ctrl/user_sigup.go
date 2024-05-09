@@ -12,26 +12,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UserSignupCtrl ctrl
-type UserSignupCtrl struct {
+// UserSignCtrl ctrl
+type UserSignCtrl struct {
 	Usecase domain.SignupUsecase
 }
 
-func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
+func NewUserSignCtl(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
 	repo := repository.NewUserRepo(app.Database)
 	us := usecase.NewSignupUsecase(usecase.SignupUsecaseConfig{
 		Repo:           repo,
 		ContextTimeout: timeout,
 	})
-	sc := UserSignupCtrl{
+	sc := UserSignCtrl{
 		Usecase: us,
 	}
 	group.POST("/signup", sc.Signup)
-	group.POST("/sing-in", sc.SingIn)
+	group.POST("/sign-in", sc.SingIn)
 }
 
 // Signup
-// @Tags UserSignup
+// @Tags UserSign 用户注册登录
 // @Summary 用户注册
 // @Version 1.0
 // @Produce application/json
@@ -39,7 +39,7 @@ func NewSignupCtl(app *bootstrap.Application, timeout time.Duration, group *gin.
 // @Router /api/v1/signup [post]
 // @Success 200 {object} response.Response
 // @Security ApiKeyAuth
-func (u *UserSignupCtrl) Signup(c *gin.Context) {
+func (u *UserSignCtrl) Signup(c *gin.Context) {
 	var req request.SignupReq
 	var err error
 	defer func() {
@@ -61,15 +61,15 @@ func (u *UserSignupCtrl) Signup(c *gin.Context) {
 }
 
 // SingIn 登入
-// @Tags UserSingIn
+// @Tags UserSign 用户注册登录
 // @Summary 用户登入
 // @Version 1.0
 // @Produce application/json
 // @Param {} body request.SignInReq true "body"
-// @Router /api/v1/sing-in [post]
+// @Router /api/v1/sign-in [post]
 // @Success 200 {object} response.Response{data=response.SignInResp}
 // @Security ApiKeyAuth
-func (u *UserSignupCtrl) SingIn(c *gin.Context) {
+func (u *UserSignCtrl) SingIn(c *gin.Context) {
 	var req request.SignInReq
 	var err error
 	defer func() {
