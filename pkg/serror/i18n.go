@@ -12,10 +12,10 @@ var bundle *i18n.Bundle
 func InitI18n() error {
 	bundle = i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
-	if _, err := bundle.LoadMessageFile("config/en.json"); err != nil {
+	if _, err := bundle.LoadMessageFile("config/locales/en.json"); err != nil {
 		return err
 	}
-	if _, err := bundle.LoadMessageFile("config/zh.json"); err != nil {
+	if _, err := bundle.LoadMessageFile("config/locales/zh.json"); err != nil {
 		return err
 	}
 	return nil
