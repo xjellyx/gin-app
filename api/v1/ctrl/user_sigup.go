@@ -17,10 +17,12 @@ type UserSignCtrl struct {
 	Usecase domain.SignupUsecase
 }
 
-func NewUserSignCtl(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
+func SetupUserSignRoute(app *bootstrap.Application, timeout time.Duration, group *gin.RouterGroup) {
 	repo := repository.NewUserRepo(app.Database)
+	menuRepo := repository.NewMenuRepo(app.Database)
 	us := usecase.NewSignupUsecase(usecase.SignupUsecaseConfig{
 		Repo:           repo,
+		MenuRepo:       menuRepo,
 		ContextTimeout: timeout,
 	})
 	sc := UserSignCtrl{
@@ -28,6 +30,7 @@ func NewUserSignCtl(app *bootstrap.Application, timeout time.Duration, group *gi
 	}
 	group.POST("/signup", sc.Signup)
 	group.POST("/sign-in", sc.SingIn)
+	group.GET("menus/constant/tree", sc.GetConstantMenuTree)
 }
 
 // Signup
@@ -86,4 +89,21 @@ func (u *UserSignCtrl) SingIn(c *gin.Context) {
 		return
 	}
 	SuccessResponse(c, res)
+}
+
+// GetConstantMenuTree
+// @Tags UserHimSelf
+// @Summary 用户菜单
+// @Version 1.0
+// @Produce application/json
+// @Router /api/v1/menus/constant [get]
+// @Success 200 {object} response.Response{data=response.GetMenusTreeResp}
+// @Security ApiKeyAuth
+func (u *UserSignCtrl) GetConstantMenuTree(c *gin.Context) {
+	detail, err := u.Usecase.GetConstantMenuTree(c.Request.Context())
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+	SuccessResponse(c, detail)
 }

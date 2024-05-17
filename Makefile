@@ -16,4 +16,4 @@ clean:
 
 # 生成swag文档
 swag:
-	 swag init  -g cmd/main.go
+	 swag init   -g cmd/main.go

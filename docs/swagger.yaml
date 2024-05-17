@@ -1,25 +1,150 @@
 definitions:
-  domain.Pagination:
+  request.AddMenuAPIPermissionReq:
     properties:
-      pageNum:
+      apiIds:
+        description: apiIds
+        items: {}
+        type: array
+      menuId:
+        description: 菜单ID
         type: integer
-      pageSize:
-        type: integer
-      total:
-        type: integer
+    required:
+    - menuId
     type: object
-  domain.Response:
+  request.AddMenuReq:
+    type: object
+  request.AddRoleAPIPermissionReq:
+    properties:
+      apiIds:
+        description: apiIds
+        items: {}
+        type: array
+      roleId:
+        description: 角色ID
+        type: integer
+    required:
+    - roleId
+    type: object
+  request.AddRoleMenuPermissionReq:
+    properties:
+      id:
+        type: integer
+      menuIds:
+        items:
+          type: integer
+        type: array
+    type: object
+  request.AddRoleReq:
     properties:
       code:
-        description: Code 0为成功，其他都是失败
+        description: 编码
         type: string
-      data:
-        description: Data 返回数据
-      msg:
-        description: Msg 返回提示
+      desc:
+        description: 描述
+        type: string
+      name:
+        description: 名称
+        type: string
+      status:
+        description: 状态
         type: string
     type: object
-  domain.SignupReq:
+  request.EditMenuReq:
+    properties:
+      buttons:
+        description: 按钮
+        items:
+          $ref: '#/definitions/types.MenuButton'
+        type: array
+      component:
+        description: 组件路径
+        type: string
+      constant:
+        description: 是否常量
+        type: boolean
+      fixedIndexInTab:
+        description: 固定在标签上的index
+        type: integer
+      hideInMenu:
+        description: 是否隐藏
+        type: boolean
+      href:
+        description: 跳转链接
+        type: string
+      i18nKey:
+        description: 国际化key
+        type: string
+      icon:
+        description: 图标
+        type: string
+      iconType:
+        allOf:
+        - $ref: '#/definitions/types.MenuIconType'
+        description: 图标类型
+        maximum: 2
+        minimum: 1
+      keepAlive:
+        description: 是否缓存
+        type: boolean
+      menuName:
+        description: 菜单名
+        type: string
+      menuType:
+        allOf:
+        - $ref: '#/definitions/types.MenuType'
+        description: 菜单类型
+        maximum: 3
+        minimum: 1
+      multiTab:
+        description: 是否多标签
+        type: boolean
+      order:
+        description: 排序
+        type: integer
+      query:
+        description: 查询参数
+        items:
+          $ref: '#/definitions/types.MenuQuery'
+        type: array
+      routeName:
+        description: 路由名
+        type: string
+      routePath:
+        description: 路由路径
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/types.MenuStatus'
+        description: 状态
+        maximum: 3
+        minimum: 1
+    required:
+    - iconType
+    - menuName
+    - menuType
+    - status
+    type: object
+  request.SetRoleRouteFrontPageReq:
+    properties:
+      id:
+        type: integer
+      routePath:
+        type: string
+    type: object
+  request.SignInReq:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 16
+        minLength: 8
+        type: string
+      phone:
+        type: string
+    required:
+    - password
+    type: object
+  request.SignupReq:
     properties:
       code:
         description: 验证码
@@ -36,29 +161,412 @@ definitions:
     required:
     - password
     type: object
-  domain.SingInReq:
+  request.UserAdminAddReq:
     properties:
       email:
+        description: 邮箱
         type: string
-      password:
-        maxLength: 16
-        minLength: 8
-        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/types.UserGender'
+        description: 性别1未知，2男，3女
+        maximum: 3
+        minimum: 1
       phone:
+        description: 手机号码
+        type: string
+      roles:
+        description: 角色
+        items:
+          type: string
+        type: array
+      status:
+        allOf:
+        - $ref: '#/definitions/types.UserStatus'
+        description: 状态：1正常，2禁止，3删除
+        maximum: 3
+        minimum: 1
+      username:
+        description: 用户名
         type: string
     required:
-    - password
+    - email
+    - gender
+    - status
     type: object
-  domain.UserAdminListResp:
+  request.UserAdminUpdateReq:
     properties:
-      list:
+      email:
+        description: 邮箱
+        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/types.UserGender'
+        description: 性别
+      phone:
+        description: 手机号码
+        type: string
+      roles:
+        description: 角色
         items:
-          $ref: '#/definitions/domain.UserListInfo'
+          type: string
         type: array
-      pagination:
-        $ref: '#/definitions/domain.Pagination'
+      status:
+        allOf:
+        - $ref: '#/definitions/types.UserStatus'
+        description: 状态
+      username:
+        description: 用户名
+        type: string
     type: object
-  domain.UserGender:
+  response.GetMenusResp:
+    properties:
+      pagination:
+        $ref: '#/definitions/response.Pagination'
+      records:
+        items:
+          $ref: '#/definitions/response.Menu'
+        type: array
+    type: object
+  response.GetMenusTreeResp:
+    properties:
+      home:
+        type: string
+      routes:
+        items:
+          $ref: '#/definitions/response.UserMenuItem'
+        type: array
+    type: object
+  response.GetRolesResp:
+    properties:
+      pagination:
+        $ref: '#/definitions/response.Pagination'
+      records:
+        items:
+          $ref: '#/definitions/response.Role'
+        type: array
+    type: object
+  response.Menu:
+    properties:
+      buttons:
+        description: 按钮
+        items:
+          $ref: '#/definitions/types.MenuButton'
+        type: array
+      children:
+        items:
+          $ref: '#/definitions/response.Menu'
+        type: array
+      component:
+        description: 组件路径
+        type: string
+      constant:
+        description: 是否常量
+        type: boolean
+      fixedIndexInTab:
+        description: 固定在标签上的index
+        type: integer
+      hideInMenu:
+        description: 是否隐藏
+        type: boolean
+      href:
+        description: 跳转链接
+        type: string
+      i18nKey:
+        description: 国际化key
+        type: string
+      icon:
+        description: 图标
+        type: string
+      iconType:
+        allOf:
+        - $ref: '#/definitions/types.MenuIconType'
+        description: 图标类型
+        maximum: 2
+        minimum: 1
+      id:
+        type: integer
+      keepAlive:
+        description: 是否缓存
+        type: boolean
+      menuName:
+        description: 菜单名
+        type: string
+      menuType:
+        allOf:
+        - $ref: '#/definitions/types.MenuType'
+        description: 菜单类型
+        maximum: 3
+        minimum: 1
+      multiTab:
+        description: 是否多标签
+        type: boolean
+      order:
+        description: 排序
+        type: integer
+      parentId:
+        description: 父级ID
+        type: integer
+      query:
+        description: 查询参数
+        items:
+          $ref: '#/definitions/types.MenuQuery'
+        type: array
+      routeName:
+        description: 路由名
+        type: string
+      routePath:
+        description: 路由路径
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/types.MenuStatus'
+        description: 状态
+        maximum: 3
+        minimum: 1
+    required:
+    - iconType
+    - menuName
+    - menuType
+    - status
+    type: object
+  response.MenuTreeItem:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/response.MenuTreeItem'
+        type: array
+      i18nKey:
+        description: 国际化key
+        type: string
+      id:
+        type: integer
+      label:
+        type: string
+      order:
+        type: integer
+      pId:
+        type: integer
+    type: object
+  response.Pagination:
+    properties:
+      pageNum:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.Response:
+    properties:
+      code:
+        description: Code 0为成功，其他都是失败
+        type: string
+      data:
+        description: Data 返回数据
+      msg:
+        description: Msg 返回提示
+        type: string
+    type: object
+  response.Role:
+    properties:
+      code:
+        description: 编码
+        type: string
+      desc:
+        description: 描述
+        type: string
+      id:
+        type: integer
+      name:
+        description: 名称
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/types.RoleStatus'
+        description: 状态
+    type: object
+  response.SignInResp:
+    properties:
+      expireAt:
+        type: string
+      refreshToken:
+        type: string
+      token:
+        type: string
+    type: object
+  response.SysAPITreeResp:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/response.SysAPITreeResp'
+        type: array
+      id: {}
+      label:
+        type: string
+      pId:
+        type: integer
+    type: object
+  response.UserAdminListResp:
+    properties:
+      pagination:
+        $ref: '#/definitions/response.Pagination'
+      records:
+        items:
+          $ref: '#/definitions/response.UserListInfo'
+        type: array
+    type: object
+  response.UserInfo:
+    properties:
+      createdAt:
+        description: 注册时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/types.UserGender'
+        description: 性别 1未知、2男性、3女性
+      phone:
+        description: 电话
+        type: string
+      roles:
+        description: 角色
+        items:
+          type: string
+        type: array
+      username:
+        description: username
+        type: string
+    type: object
+  response.UserListInfo:
+    properties:
+      createdAt:
+        description: 注册时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      gender:
+        allOf:
+        - $ref: '#/definitions/types.UserGender'
+        description: 性别 1未知、2男性、3女性
+      id:
+        type: integer
+      phone:
+        description: 电话
+        type: string
+      roles:
+        description: 角色
+        items:
+          type: string
+        type: array
+      status:
+        $ref: '#/definitions/types.UserStatus'
+      username:
+        description: username
+        type: string
+      uuid:
+        type: string
+    type: object
+  response.UserMenuItem:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/response.UserMenuItem'
+        type: array
+      component:
+        type: string
+      id:
+        type: integer
+      meta:
+        $ref: '#/definitions/response.UserMenuItemMeta'
+      name:
+        type: string
+      pId:
+        type: integer
+      path:
+        type: string
+    type: object
+  response.UserMenuItemMeta:
+    properties:
+      closeTab:
+        type: boolean
+      defaultMenu:
+        type: boolean
+      i18nKey:
+        type: string
+      icon:
+        type: string
+      keepAlive:
+        type: boolean
+      order:
+        type: integer
+      title:
+        type: string
+    type: object
+  types.MenuButton:
+    properties:
+      code:
+        type: string
+      desc:
+        type: string
+    type: object
+  types.MenuIconType:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      MenuIconTypeIconify: iconify
+      MenuIconTypeLocal: local
+    x-enum-varnames:
+    - MenuIconTypeIconify
+    - MenuIconTypeLocal
+  types.MenuQuery:
+    properties:
+      key:
+        type: string
+      value: {}
+    type: object
+  types.MenuStatus:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      MenuStatusDisable: 禁用
+      MenuStatusEnable: 启用
+    x-enum-varnames:
+    - MenuStatusEnable
+    - MenuStatusDisable
+  types.MenuType:
+    enum:
+    - 1
+    - 2
+    - 3
+    type: integer
+    x-enum-comments:
+      MenuTypeButton: 按钮
+      MenuTypeDir: 目录
+      MenuTypeMenu: 菜单
+    x-enum-varnames:
+    - MenuTypeDir
+    - MenuTypeMenu
+    - MenuTypeButton
+  types.RoleStatus:
+    enum:
+    - 1
+    - 2
+    type: integer
+    x-enum-comments:
+      RoleStatusDisable: 禁用
+      RoleStatusEnable: 启用
+    x-enum-varnames:
+    - RoleStatusEnable
+    - RoleStatusDisable
+  types.UserGender:
     enum:
     - 1
     - 2
@@ -68,73 +576,523 @@ definitions:
       GenderFemale: female
       GenderMale: male
     x-enum-varnames:
-    - GenderUnknown
     - GenderMale
     - GenderFemale
-  domain.UserInfo:
-    properties:
-      createdAt:
-        description: 注册时间
-        type: string
-      email:
-        description: 邮箱
-        type: string
-      gender:
-        allOf:
-        - $ref: '#/definitions/domain.UserGender'
-        description: 性别 1未知、2男性、3女性
-      phone:
-        description: 电话
-        type: string
-      username:
-        description: username
-        type: string
-    type: object
-  domain.UserListInfo:
-    properties:
-      createdAt:
-        description: 注册时间
-        type: string
-      email:
-        description: 邮箱
-        type: string
-      gender:
-        allOf:
-        - $ref: '#/definitions/domain.UserGender'
-        description: 性别 1未知、2男性、3女性
-      id:
-        type: integer
-      phone:
-        description: 电话
-        type: string
-      status:
-        $ref: '#/definitions/domain.UserStatus'
-      username:
-        description: username
-        type: string
-      uuid:
-        type: string
-    type: object
-  domain.UserStatus:
+    - GenderUnknown
+  types.UserStatus:
     enum:
     - 1
     - 2
-    - 3
-    - 4
     type: integer
     x-enum-comments:
-      StatusDeleted: deleted
-      StatusFreeze: 冻结
-      StatusLocked: 锁定
-      StatusNormal: 正常
+      UserStatusLocked: 禁用
+      UserStatusNormal: 正常
     x-enum-varnames:
-    - StatusNormal
-    - StatusLocked
-    - StatusFreeze
-    - StatusDeleted
+    - UserStatusNormal
+    - UserStatusLocked
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
 info:
-  contact: {}
+  contact:
+    email: olongfen@gmail.com
+    name: Jelly
+  description: This is a sample server celler server.
+  termsOfService: http://swagger.io/terms/
+  title: System management API
+  version: "1.0"
 paths:
+  /api/v1/menus:
+    delete:
+      parameters:
+      - description: 菜单ID列表
+        in: body
+        name: ids
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除菜单
+      tags:
+      - menu 菜单管理
+    get:
+      parameters:
+      - description: 页数
+        in: query
+        name: pageNum
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetMenusResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取菜单列表
+      tags:
+      - menu 菜单管理
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 新增菜单
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddMenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增菜单
+      tags:
+      - menu 菜单管理
+  /api/v1/menus/{id}:
+    delete:
+      parameters:
+      - description: 菜单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除菜单
+      tags:
+      - menu 菜单管理
+    put:
+      parameters:
+      - description: 菜单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 编辑菜单
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.EditMenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 编辑菜单
+      tags:
+      - menu 菜单管理
+  /api/v1/menus/{id}/perm:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取菜单api权限
+      tags:
+      - menu 菜单管理
+  /api/v1/menus/constant:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetMenusTreeResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用户菜单
+      tags:
+      - UserHimSelf
+  /api/v1/menus/pages:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取全部页面
+      tags:
+      - menu 菜单管理
+  /api/v1/menus/perm:
+    post:
+      parameters:
+      - description: 配置菜单api权限
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddMenuAPIPermissionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 配置菜单api权限
+      tags:
+      - menu 菜单管理
+  /api/v1/menus/tree:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.MenuTreeItem'
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取菜单树
+      tags:
+      - menu 菜单管理
+  /api/v1/roles:
+    get:
+      parameters:
+      - description: 编码
+        in: query
+        name: code
+        type: string
+      - description: 名称
+        in: query
+        name: name
+        type: string
+      - description: 页数
+        in: query
+        name: pageNum
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 状态
+        enum:
+        - 1
+        - 2
+        in: query
+        name: status
+        type: integer
+        x-enum-comments:
+          RoleStatusDisable: 禁用
+          RoleStatusEnable: 启用
+        x-enum-varnames:
+        - RoleStatusEnable
+        - RoleStatusDisable
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetRolesResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取角色列表
+      tags:
+      - Role 角色管理
+    post:
+      parameters:
+      - description: 请求参数
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddRoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加角色
+      tags:
+      - Role 角色管理
+  /api/v1/roles/{id}:
+    delete:
+      parameters:
+      - description: 请求参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除角色
+      tags:
+      - Role 角色管理
+  /api/v1/roles/{id}/front-page:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取角色前台页面
+      tags:
+      - Role 角色管理
+  /api/v1/roles/{id}/menu:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取角色菜单权限
+      tags:
+      - Role 角色管理
+  /api/v1/roles/{id}/menu/tree:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取角色菜单
+      tags:
+      - Role 角色管理
+  /api/v1/roles/{id}/perm:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取角色api权限
+      tags:
+      - Role 角色管理
+  /api/v1/roles/all:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.Role'
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取全部角色
+      tags:
+      - Role 角色管理
+  /api/v1/roles/batch:
+    delete:
+      parameters:
+      - description: 请求参数
+        in: body
+        name: ids
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除角色
+      tags:
+      - Role 角色管理
+  /api/v1/roles/front-page:
+    post:
+      parameters:
+      - description: 设置角色前台页面
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.SetRoleRouteFrontPageReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 设置角色前台页面
+      tags:
+      - Role 角色管理
+  /api/v1/roles/menu:
+    get:
+      parameters:
+      - description: 配置角色菜单权限
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddRoleMenuPermissionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 配置角色菜单权限
+      tags:
+      - Role 角色管理
+  /api/v1/roles/perm:
+    post:
+      parameters:
+      - description: 配置菜单api权限
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddRoleAPIPermissionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 配置角色api权限
+      tags:
+      - Role 角色管理
+  /api/v1/sign-in:
+    post:
+      parameters:
+      - description: body
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.SignInReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SignInResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登入
+      tags:
+      - UserSign 用户注册登录
   /api/v1/signup:
     post:
       parameters:
@@ -143,40 +1101,38 @@ paths:
         name: '{}'
         required: true
         schema:
-          $ref: '#/definitions/domain.SignupReq'
+          $ref: '#/definitions/request.SignupReq'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: 用户注册
       tags:
-      - UserSignup
-  /api/v1/sing-in:
-    post:
-      parameters:
-      - description: body
-        in: body
-        name: '{}'
-        required: true
-        schema:
-          $ref: '#/definitions/domain.SingInReq'
+      - UserSign 用户注册登录
+  /api/v1/sys-api/tree:
+    get:
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SysAPITreeResp'
+              type: object
       security:
       - ApiKeyAuth: []
-      summary: 用户登入
+      summary: 获取系统接口树
       tags:
-      - UserSingIn
+      - sys-api 系统接口
   /api/v1/user/info:
     get:
       produces:
@@ -186,18 +1142,24 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/domain.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/domain.UserInfo'
+                  $ref: '#/definitions/response.UserInfo'
               type: object
       security:
       - ApiKeyAuth: []
       summary: 用户信息
       tags:
       - UserHimSelf
-  /api/v1/users:
+  /api/v1/user/menus:
     get:
+      parameters:
+      - description: 角色代码
+        in: query
+        name: code
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -205,27 +1167,175 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/domain.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/domain.UserAdminListResp'
+                  $ref: '#/definitions/response.GetMenusTreeResp'
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 用户列表
+      summary: 用户菜单
       tags:
-      - UserAdminCtrl
-    post:
+      - UserHimSelf
+  /api/v1/users:
+    get:
+      parameters:
+      - description: 邮箱
+        in: query
+        name: email
+        type: string
+      - description: 性别
+        enum:
+        - 1
+        - 2
+        - 3
+        in: query
+        name: gender
+        type: integer
+        x-enum-comments:
+          GenderFemale: female
+          GenderMale: male
+        x-enum-varnames:
+        - GenderMale
+        - GenderFemale
+        - GenderUnknown
+      - description: 页数
+        in: query
+        name: pageNum
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        type: integer
+      - description: 手机号码
+        in: query
+        name: phone
+        type: string
+      - description: 状态
+        enum:
+        - 1
+        - 2
+        in: query
+        name: status
+        type: integer
+        x-enum-comments:
+          UserStatusLocked: 禁用
+          UserStatusNormal: 正常
+        x-enum-varnames:
+        - UserStatusNormal
+        - UserStatusLocked
+      - description: 用户名
+        in: query
+        name: username
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.UserAdminListResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用户列表
+      tags:
+      - User 用户管理
+    post:
+      parameters:
+      - description: 添加用户
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminAddReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: 添加用户
       tags:
-      - UserAdminCtrl
+      - User 用户管理
+  /api/v1/users/{id}:
+    delete:
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除用户
+      tags:
+      - User 用户管理
+    put:
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新用户
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户
+      tags:
+      - User 用户管理
+  /api/v1/users/batch:
+    delete:
+      parameters:
+      - description: 用户ID列表
+        in: body
+        name: ids
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除用户
+      tags:
+      - User 用户管理
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

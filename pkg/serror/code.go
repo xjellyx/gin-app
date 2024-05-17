@@ -16,4 +16,6 @@ const (
 	ErrUserStatusAbnormal      ErrorCode = "USER_STATUS_ABNORMAL"
 	ErrUserRecordNotFound      ErrorCode = "USER_RECORD_NOT_FOUND"
 	ErrRecordNotFound          ErrorCode = "RECORD_NOT_FOUND"
+	ErrCasbinRemoveFail        ErrorCode = "CASBIN_REMOVE_FAIL"
+	ErrCasbinAddFail           ErrorCode = "CASBIN_ADD_FAIL"
 )

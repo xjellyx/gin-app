@@ -20,8 +20,9 @@ type Conf struct {
 	//
 	Resource string `mapstructure:"RESOURCE"`
 	// 日志
-	LogConf LumberjackConfig
-	Nacos   NacosCfg `mapstructure:"NACOS"`
+	LogConf     LumberjackConfig
+	Nacos       NacosCfg `mapstructure:"NACOS"`
+	CasbinModel string   `mapstructure:"casbin_model"`
 }
 
 type DBCfg struct {
@@ -69,7 +70,7 @@ func NewConf(configPath string) (*Conf, error) {
 	// 设置默认值
 	viper.SetDefault("HTTP_PORT", 8080)
 	viper.SetDefault("RESOURCE", "resource")
-
+	viper.SetDefault("casbin_model", "config/model_casbin.conf")
 	// 读取环境变量
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))

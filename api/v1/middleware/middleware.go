@@ -127,9 +127,20 @@ func HandlerAuth() gin.HandlerFunc {
 			})
 			return
 		}
+		//for _, v := range cla.RolesId {
+		//	ok, err := bootstrap.GlobalApp.Casbin.Enforce(usecase.CasbinRoleKey, v, ctx.Request.URL.Path, ctx.Request.Method)
+		//	if err != nil || !ok {
+		//		ctx.AbortWithStatusJSON(401, gin.H{
+		//			"code": serror.ErrUnauthorized,
+		//			"msg":  msg,
+		//		})
+		//		return
+		//	}
+		//}
 
 		ctx.Request = ctx.Request.WithContext(scontext.SetUserUuid(ctx.Request.Context(), cla.UserUuid))
 		ctx.Request = ctx.Request.WithContext(scontext.SetUsername(ctx.Request.Context(), cla.Username))
+		ctx.Request = ctx.Request.WithContext(scontext.SetRoles(ctx.Request.Context(), cla.Roles))
 		ctx.Next()
 	}
 }

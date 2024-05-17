@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"strings"
 
 	"gin-app/internal/domain/types"
@@ -18,14 +19,16 @@ type User struct {
 	Username string           `gorm:"size:255;uniqueIndex;default:null;comment:name"`
 	Email    string           `gorm:"size:255;uniqueIndex;default:null;comment:email"`
 	Password string           `gorm:"size:255;comment:password"`
-	Gender   types.UserGender `gorm:"default:1;comment:gender,1:unknown,2:male,3:female"`
-	Status   types.UserStatus `gorm:"default:1;comment:status,1:normal,2:锁定,3:冻结,4:deleted"`
+	Gender   types.UserGender `gorm:"default:1;comment:gender,1:male,2:female,3:unknown"`
+	Status   types.UserStatus `gorm:"default:1;comment:status,1:normal,2:禁用"`
 	Phone    string           `gorm:"size:255;default:null;uniqueIndex;comment:phone"`
+	Roles    []*Role          `gorm:"many2many:user_roles;"`
 }
 
 // UserRepo user repository
 type UserRepo interface {
 	gormgenerics.BasicRepo[User]
+	GetAllRoles(ctx context.Context, id uint) ([]*Role, error)
 }
 
 func TranslateUserDBErr(errV *pgconn.PgError, lan string) error {

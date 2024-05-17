@@ -11,5 +11,7 @@
   "USER_STATUS_ABNORMAL": "User status is abnormal",
   "INVALID_TOKEN": "Invalid token",
   "USER_RECORD_NOT_FOUND": "User record not found",
-  "ERR_RECORD_NOT_FOUND": "Record not found"
+  "ERR_RECORD_NOT_FOUND": "Record not found",
+  "CASBIN_REMOVE_FAIL": "Casbin remove filtered policy failed",
+  "CASBIN_ADD_FAIL": "Casbin add policy failed"
 }

@@ -52,3 +52,18 @@ func GetUsername(ctx context.Context) string {
 	}
 	return ""
 }
+
+type rolesCtxTag struct{}
+
+// SetRoles set roles to context
+func SetRoles(ctx context.Context, roles []string) context.Context {
+	return context.WithValue(ctx, rolesCtxTag{}, roles)
+}
+
+// GetRoles get roles by context
+func GetRoles(ctx context.Context) []string {
+	if val, ok := ctx.Value(rolesCtxTag{}).([]string); ok {
+		return val
+	}
+	return nil
+}

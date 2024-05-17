@@ -23,6 +23,7 @@ import (
 
 type SignupUsecaseConfig struct {
 	Repo           domain.UserRepo
+	MenuRepo       domain.MenuRepo
 	Log            *zap.Logger
 	ContextTimeout time.Duration
 }
@@ -84,25 +85,34 @@ func (s *signupUsecase) SignIn(ctx context.Context, req *request.SignInReq) (*re
 	}
 	lan := scontext.GetLanguage(ctx)
 	// 判断用户的状态
-	if user.Status != types.StatusNormal {
+	if user.Status != types.UserStatusNormal {
 		switch user.Status {
-		case types.StatusLocked:
+		case types.UserStatusLocked:
 			err = serror.Error(serror.ErrUserInactivate, lan)
-			return nil, err
-		case types.StatusDeleted:
-			err = serror.Error(serror.ErrUserDeleted, lan)
-			return nil, err
-		case types.StatusFreeze:
-			err = serror.Error(serror.ErrUserFreeze, lan)
 			return nil, err
 		default:
 			err = serror.Error(serror.ErrUserStatusAbnormal, lan)
 			return nil, err
 		}
 	}
+	roles, err := s.cfg.Repo.GetAllRoles(ctx, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	var (
+		rolesCode []string
+		rolesId   []uint
+	)
+	for _, v := range roles {
+		rolesCode = append(rolesCode, v.Code)
+		rolesId = append(rolesId, v.ID)
+	}
 	res, err := generateToken(&Claims{
 		UserUuid: user.Uuid,
 		Username: user.Username,
+		UserID:   user.ID,
+		Roles:    rolesCode,
+		RolesId:  rolesId,
 	})
 	if err != nil {
 		return nil, err
@@ -112,8 +122,11 @@ func (s *signupUsecase) SignIn(ctx context.Context, req *request.SignInReq) (*re
 
 // Claims 自定义存储一些信息
 type Claims struct {
-	UserUuid string `json:"userUuid,omitempty"`
-	Username string `json:"username,omitempty"`
+	UserUuid string   `json:"userUuid,omitempty"`
+	UserID   uint     `json:"userId,omitempty"`
+	Username string   `json:"username,omitempty"`
+	Roles    []string `json:"roles,omitempty"`
+	RolesId  []uint   `json:"rolesId,omitempty"`
 	jwt.RegisteredClaims
 }
 
@@ -161,7 +174,7 @@ func generateToken(cla *Claims) (ret *response.SignInResp, err error) {
 	tokenInfo := &response.SignInResp{
 		Token:        tokenString,
 		RefreshToken: refreshToken,
-		ExpiresAt:    cla.ExpiresAt.Time,
+		ExpireAt:     cla.ExpiresAt.Time,
 	}
 	return tokenInfo, nil
 }
@@ -176,10 +189,25 @@ func jwtTokenKeyFunc(key []byte) jwt.Keyfunc {
 func ParseToken(tokenString string, cla *Claims, key string) bool {
 	token, err := jwt.ParseWithClaims(tokenString, cla, jwtTokenKeyFunc([]byte(key)))
 	if err != nil {
-		if err != nil {
-			slog.Error("parseToken", err)
-		}
+		slog.Error("parseToken", err)
 		return false
 	}
 	return token.Valid
+}
+
+func (s *signupUsecase) GetConstantMenuTree(ctx context.Context) ([]*response.UserMenuItem, error) {
+	ret := make([]*response.UserMenuItem, 0)
+	menus, err := s.cfg.MenuRepo.Find(ctx, clause.Eq{Column: "constant", Value: true})
+	if err != nil {
+		return nil, err
+	}
+	if len(menus) == 0 {
+		return ret, nil
+	}
+	for _, v := range menus {
+		ret = append(ret, domain.MenuModel2UserMenuResp(v))
+	}
+	ret = response.BuildMenuTree(ret)
+	return ret, nil
+
 }

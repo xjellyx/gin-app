@@ -13,6 +13,6 @@ type Response struct {
 // Pagination 页数信息
 type Pagination struct {
 	Total    int64 `json:"total"`
-	PageSize uint  `json:"pageSize"`
-	PageNum  uint  `json:"pageNum"`
+	PageSize int   `json:"pageSize"`
+	PageNum  int   `json:"pageNum"`
 }

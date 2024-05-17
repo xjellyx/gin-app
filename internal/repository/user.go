@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"gin-app/internal/domain"
 
 	gormgenerics "github.com/xjellyx/gorm-generics"
@@ -22,4 +23,10 @@ func NewUserRepo(data gormgenerics.Database) domain.UserRepo {
 		data,
 	}
 	return stu
+}
+
+func (u *userRepo) GetAllRoles(ctx context.Context, id uint) ([]*domain.Role, error) {
+	var user *domain.User
+	err := u.db.DB(ctx).Model(&domain.User{}).Preload("Roles").Where("id = ?", id).First(&user).Error
+	return user.Roles, err
 }

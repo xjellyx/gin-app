@@ -16,6 +16,20 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// @title           System management API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   Jelly
+// @contact.email  olongfen@gmail.com
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	pflag.Parse()
 	app, err := bootstrap.App(config)

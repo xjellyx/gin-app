@@ -28,3 +28,4 @@ nacos:
   client_ip: 127.0.0.1
   client_port: 8888
   client_weight: 1
+casbin_model: "config/model_casbin.conf"

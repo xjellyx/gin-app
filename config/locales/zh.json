@@ -11,5 +11,7 @@
   "USER_STATUS_ABNORMAL": "该用户状态异常",
   "INVALID_TOKEN": "无效的令牌",
   "USER_RECORD_NOT_FOUND": "找不到用户记录",
-  "RECORD_NOT_FOUND": "找不到记录"
+  "RECORD_NOT_FOUND": "找不到记录",
+  "CASBIN_REMOVE_FAIL": "删除casbin策略失败",
+  "CASBIN_ADD_FAIL": "添加casbin策略失败"
 }

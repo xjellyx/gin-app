@@ -8,6 +8,7 @@ import (
 	"gin-app/internal/infra/cache"
 	"gin-app/pkg/serror"
 
+	"github.com/casbin/casbin/v2"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/lmittmann/tint"
 	"github.com/ulule/limiter/v3"
@@ -19,7 +20,10 @@ type Application struct {
 	Database gormgenerics.Database
 	Rdb      cache.Cache
 	Limiter  *limiter.Limiter
+	Casbin   casbin.IEnforcer
 }
+
+var GlobalApp *Application
 
 func App(confPath string) (*Application, error) {
 
@@ -61,7 +65,13 @@ func App(confPath string) (*Application, error) {
 	if err != nil {
 		return nil, err
 	}
+	en, err := NewEnforcer(database, conf.CasbinModel)
+	if err != nil {
+		return nil, err
+	}
 	app := &Application{Database: database, Conf: conf, Rdb: rdb, Limiter: limit}
+	app.Casbin = en
+	GlobalApp = app
 	return app, nil
 }
 

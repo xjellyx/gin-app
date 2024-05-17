@@ -21,12 +21,15 @@ func Setup(app *bootstrap.Application, timeout time.Duration) *http.Server {
 	publicRouter := en.Group("/api/v1")
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError())
-	ctrl.NewUserSignCtl(app, timeout, publicRouter)
+	ctrl.SetupUserSignRoute(app, timeout, publicRouter)
 	if app.Conf.JWT.Enable {
 		publicRouter.Use(middleware.HandlerAuth())
 	}
-	ctrl.NewUserHimSelfCtrl(app, timeout, publicRouter)
-	ctrl.NewAdminCtrl(app, timeout, publicRouter)
+	ctrl.SetupUserHimSelfRoute(app, timeout, publicRouter)
+	ctrl.SetupUserAdminRoute(app, timeout, publicRouter)
+	ctrl.SetupRoleRoute(app, timeout, publicRouter)
+	ctrl.SetupMenuRoute(app, timeout, publicRouter)
+	ctrl.SetupSysAPIRoute(app, timeout, publicRouter)
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(`:%v`, app.Conf.HTTPort),
 		Handler: en,
