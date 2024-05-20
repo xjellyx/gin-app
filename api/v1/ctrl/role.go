@@ -41,6 +41,7 @@ func SetupRoleRoute(app *bootstrap.Application, timeout time.Duration, r *gin.Ro
 	h.POST("", ctl.addRole)
 	h.DELETE("", ctl.deleteBatch)
 	h.DELETE("/:id", ctl.delete)
+	h.PUT("/:id", ctl.edit)
 	h.POST("perm", ctl.addApiPerm)
 	h.GET(":id/perm", ctl.getApiPerm)
 	h.POST("menu", ctl.addRoleMenuPerm)
@@ -145,6 +146,34 @@ func (u *roleController) delete(c *gin.Context) {
 		return
 	}
 	if err = u.usecase.Delete(c.Request.Context(), uint(id)); err != nil {
+		_ = c.Error(err)
+		return
+	}
+	SuccessResponse(c, nil)
+}
+
+// @Tags Role 角色管理
+// @Summary 编辑角色
+// @Version 1.0
+// @Produce application/json
+// @Param id path int true "请求参数"
+// @Param {} body request.EditRoleReq true "请求参数"
+// @Router /api/v1/roles/{id} [put]
+// @Success 200 {object} response.Response
+// @Security ApiKeyAuth
+func (u *roleController) edit(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+	req := &request.EditRoleReq{}
+	if err = c.ShouldBindJSON(req); err != nil {
+		_ = c.Error(err)
+		return
+	}
+	if err = u.usecase.EditRole(c.Request.Context(), uint(id), req); err != nil {
 		_ = c.Error(err)
 		return
 	}

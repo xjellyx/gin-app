@@ -20,3 +20,10 @@ type AddRoleAPIPermissionReq struct {
 	RoleId int   `json:"roleId" binding:"required"` // 角色ID
 	APIIds []any `json:"apiIds"`                    // apiIds
 }
+
+type EditRoleReq struct {
+	Name   string `json:"name"`   // 名称
+	Code   string `json:"code"`   // 编码
+	Desc   string `json:"desc"`   // 描述
+	Status string `json:"status"` // 状态
+}

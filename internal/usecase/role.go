@@ -143,3 +143,19 @@ func (r *roleUsecase) DeleteBatch(ctx context.Context, ids []uint) error {
 	}
 	return nil
 }
+
+func (r *roleUsecase) EditRole(ctx context.Context, id uint, req *request.EditRoleReq) error {
+	ctx, cancelFunc := context.WithTimeout(ctx, r.cfg.Timeout)
+	defer cancelFunc()
+	role := &domain.Role{
+		Name:   req.Name,
+		Code:   req.Code,
+		Desc:   req.Desc,
+		Status: types.RoleStatusEnable,
+	}
+	err := r.cfg.Repo.Update(ctx, id, role)
+	if err != nil {
+		return err
+	}
+	return nil
+}

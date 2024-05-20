@@ -26,6 +26,7 @@ type RoleUsecase interface {
 	GetAllRoles(ctx context.Context) ([]*response.Role, error)
 	AddRole(ctx context.Context, req *request.AddRoleReq) error
 	DeleteBatch(ctx context.Context, ids []uint) error
+	EditRole(ctx context.Context, id uint, req *request.EditRoleReq) error
 	Delete(ctx context.Context, id uint) error
 }
 
