@@ -56,6 +56,14 @@ export function fetchGetAllRoles() {
   });
 }
 
+export function fetchGetUserRoles(id: Number) {
+  return request({
+    url: `/user/roles`,
+    method: 'get'
+  })
+
+}
+
 export function fetchAddRoleMenuPerm(data: any){
   return request({
     url: "roles/menu",

@@ -6,7 +6,7 @@ import {useRouteStore} from "@/store/modules/route";
 import { useRouterPush } from '@/hooks/common/router';
 import { useSvgIcon } from '@/hooks/common/icon';
 import { $t } from '@/locales';
-import {fetchGetAllRoles} from "@/service/api";
+import {fetchGetUserRoles} from "@/service/api";
 import {localStg} from "@/utils/storage";
 
 defineOptions({
@@ -37,7 +37,7 @@ type DropdownOption =
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
-  const { error, data } = await fetchGetAllRoles();
+  const { error, data } = await fetchGetUserRoles();
 
   if (!error) {
     const options = data.map(item => ({

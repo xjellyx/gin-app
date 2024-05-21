@@ -106,3 +106,31 @@ func (u *userHimSelfUsecase) GetMenusTree(ctx context.Context, code string) (*re
 	ret.Routes = response.BuildMenuTree(ret.Routes)
 	return ret, nil
 }
+
+func (u *userHimSelfUsecase) GetUserRoles(ctx context.Context) ([]*response.Role, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.cfg.ContextTimeout)
+	defer cancel()
+	rolesCode := scontext.GetRoles(ctx)
+	if len(rolesCode) == 0 {
+		return make([]*response.Role, 0), nil
+	}
+	cond := clause.IN{
+		Column: "code",
+		Values: nil,
+	}
+	for _, v := range rolesCode {
+		cond.Values = append(cond.Values, v)
+	}
+	roles, err := u.cfg.RoleRepo.Find(ctx, []clause.Expression{cond,
+		clause.Eq{Column: "status", Value: types.RoleStatusEnable}}...)
+	if err != nil {
+		return nil, err
+	}
+	ret := make([]*response.Role, 0)
+	for _, i := range roles {
+		d := domain.Role2Resp(i)
+		ret = append(ret, d)
+	}
+	return ret, nil
+
+}

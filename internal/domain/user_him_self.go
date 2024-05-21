@@ -8,4 +8,5 @@ import (
 type UserHimSelfUsecase interface {
 	Info(ctx context.Context) (*response.UserInfo, error)
 	GetMenusTree(ctx context.Context, code string) (*response.GetMenusTreeResp, error)
+	GetUserRoles(ctx context.Context) ([]*response.Role, error)
 }

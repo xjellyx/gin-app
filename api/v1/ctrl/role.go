@@ -235,7 +235,7 @@ func (u *roleController) getMenu(c *gin.Context) {
 // @Version 1.0
 // @Produce application/json
 // @Param {} body request.AddRoleMenuPermissionReq true "配置角色菜单权限"
-// @Router /api/v1/roles/menu [get]
+// @Router /api/v1/roles/menu [post]
 // @Success 200 {object} response.Response{}
 // @Security ApiKeyAuth
 func (u *roleController) addRoleMenuPerm(c *gin.Context) {

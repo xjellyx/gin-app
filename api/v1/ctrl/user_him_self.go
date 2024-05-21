@@ -31,6 +31,7 @@ func SetupUserHimSelfRoute(app *bootstrap.Application, timeout time.Duration, gr
 	h.Use(middleware.HandlerAuth(true))
 	h.GET("/info", ctl.GetUserInfo)
 	h.GET("/menus", ctl.GetMenusTree)
+	h.GET("/roles", ctl.GetRoles)
 }
 
 // GetUserInfo
@@ -63,6 +64,23 @@ func (u *UserHimSelfCtrl) GetUserInfo(c *gin.Context) {
 func (u *UserHimSelfCtrl) GetMenusTree(c *gin.Context) {
 	code := c.Query("code")
 	detail, err := u.Usecase.GetMenusTree(c.Request.Context(), code)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+	SuccessResponse(c, detail)
+}
+
+// GetRoles
+// @Tags UserHimSelf
+// @Summary 获取用户角色
+// @Version 1.0
+// @Produce application/json
+// @Router /api/v1/user/roles [get]
+// @Success 200 {object} response.Response{data=response.GetRolesResp}
+// @Security ApiKeyAuth
+func (u *UserHimSelfCtrl) GetRoles(c *gin.Context) {
+	detail, err := u.Usecase.GetUserRoles(c.Request.Context())
 	if err != nil {
 		_ = c.Error(err)
 		return

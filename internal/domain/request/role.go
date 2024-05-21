@@ -10,10 +10,10 @@ type GetRolesReq struct {
 }
 
 type AddRoleReq struct {
-	Name   string `json:"name"`   // 名称
-	Code   string `json:"code"`   // 编码
-	Desc   string `json:"desc"`   // 描述
-	Status string `json:"status"` // 状态
+	Name   string           `json:"name"`   // 名称
+	Code   string           `json:"code"`   // 编码
+	Desc   string           `json:"desc"`   // 描述
+	Status types.RoleStatus `json:"status"` // 状态
 }
 
 type AddRoleAPIPermissionReq struct {
@@ -22,8 +22,8 @@ type AddRoleAPIPermissionReq struct {
 }
 
 type EditRoleReq struct {
-	Name   string `json:"name"`   // 名称
-	Code   string `json:"code"`   // 编码
-	Desc   string `json:"desc"`   // 描述
-	Status string `json:"status"` // 状态
+	Name   string           `json:"name"`   // 名称
+	Code   string           `json:"code"`   // 编码
+	Desc   string           `json:"desc"`   // 描述
+	Status types.RoleStatus `json:"status"` // 状态
 }

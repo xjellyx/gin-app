@@ -252,6 +252,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/menus/route/exist": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "menu 菜单管理"
+                ],
+                "summary": "校验菜单是否存在",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "菜单路由",
+                        "name": "routeName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/menus/tree": {
             "get": {
                 "security": [
@@ -614,7 +647,7 @@ const docTemplate = `{
             }
         },
         "/api/v1/roles/menu": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -684,6 +717,46 @@ const docTemplate = `{
             }
         },
         "/api/v1/roles/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role 角色管理"
+                ],
+                "summary": "编辑角色",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "请求参数",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "{}",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.EditRoleReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "security": [
                     {
@@ -1002,6 +1075,42 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/response.GetMenusTreeResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/roles": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserHimSelf"
+                ],
+                "summary": "获取用户角色",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.GetRolesResp"
                                         }
                                     }
                                 }
@@ -1331,7 +1440,11 @@ const docTemplate = `{
                 },
                 "status": {
                     "description": "状态",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.RoleStatus"
+                        }
+                    ]
                 }
             }
         },
@@ -1437,6 +1550,31 @@ const docTemplate = `{
                     "allOf": [
                         {
                             "$ref": "#/definitions/types.MenuStatus"
+                        }
+                    ]
+                }
+            }
+        },
+        "request.EditRoleReq": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "编码",
+                    "type": "string"
+                },
+                "desc": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.RoleStatus"
                         }
                     ]
                 }

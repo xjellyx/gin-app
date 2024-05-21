@@ -46,8 +46,9 @@ definitions:
         description: 名称
         type: string
       status:
+        allOf:
+        - $ref: '#/definitions/types.RoleStatus'
         description: 状态
-        type: string
     type: object
   request.EditMenuReq:
     properties:
@@ -123,6 +124,22 @@ definitions:
     - menuName
     - menuType
     - status
+    type: object
+  request.EditRoleReq:
+    properties:
+      code:
+        description: 编码
+        type: string
+      desc:
+        description: 描述
+        type: string
+      name:
+        description: 名称
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/types.RoleStatus'
+        description: 状态
     type: object
   request.SetRoleRouteFrontPageReq:
     properties:
@@ -794,6 +811,26 @@ paths:
       summary: 配置菜单api权限
       tags:
       - menu 菜单管理
+  /api/v1/menus/route/exist:
+    get:
+      parameters:
+      - description: 菜单路由
+        in: query
+        name: routeName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 校验菜单是否存在
+      tags:
+      - menu 菜单管理
   /api/v1/menus/tree:
     get:
       produces:
@@ -902,6 +939,31 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 删除角色
+      tags:
+      - Role 角色管理
+    put:
+      parameters:
+      - description: 请求参数
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 请求参数
+        in: body
+        name: '{}'
+        required: true
+        schema:
+          $ref: '#/definitions/request.EditRoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 编辑角色
       tags:
       - Role 角色管理
   /api/v1/roles/{id}/front-page:
@@ -1026,7 +1088,7 @@ paths:
       tags:
       - Role 角色管理
   /api/v1/roles/menu:
-    get:
+    post:
       parameters:
       - description: 配置角色菜单权限
         in: body
@@ -1175,6 +1237,25 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 用户菜单
+      tags:
+      - UserHimSelf
+  /api/v1/user/roles:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.GetRolesResp'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户角色
       tags:
       - UserHimSelf
   /api/v1/users:
