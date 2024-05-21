@@ -6,6 +6,7 @@ import (
 	"gin-app/internal/domain/types"
 	"github.com/casbin/casbin/v2"
 	"github.com/spf13/cast"
+	"log/slog"
 	"strconv"
 	"time"
 
@@ -103,6 +104,7 @@ func (m *casbinRuleUsecase) AddRoleMenuPermission(ctx context.Context, t types.C
 	if len(policies) > 0 {
 		_, err = m.cfg.Casbin.AddPolicies(policies)
 		if err != nil {
+			slog.Error("AddRoleMenuPermission", "err", err)
 			return serror.Error(serror.ErrCasbinAddFail, scontext.GetLanguage(ctx))
 		}
 	}
@@ -127,6 +129,7 @@ func (m *casbinRuleUsecase) SetRoleRouteFrontPage(ctx context.Context, req *requ
 
 	_, err = m.cfg.Casbin.AddPolicy([]string{string(types.CasbinRoleRouteFrontPageKey), strconv.Itoa(req.ID), req.RoutePath, " "})
 	if err != nil {
+		slog.Error("SetRoleRouteFrontPage", "err", err)
 		return serror.Error(serror.ErrCasbinAddFail, scontext.GetLanguage(ctx))
 	}
 	return nil

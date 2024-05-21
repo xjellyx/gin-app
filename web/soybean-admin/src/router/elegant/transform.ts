@@ -114,14 +114,14 @@ function transformElegantRouteToVueRoute(
     }
 
   }
-
+  
   // add redirect to child
   if (children?.length && !vueRoute.redirect) {
     vueRoute.redirect = {
       name: children[0].name
     };
   }
-
+  
   if (children?.length) {
     const childRoutes = children.flatMap(child => transformElegantRouteToVueRoute(child, layouts, views));
 
@@ -143,10 +143,6 @@ function transformElegantRouteToVueRoute(
 const routeMap: RouteMap = {
   "root": "/",
   "not-found": "/:pathMatch(.*)*",
-  "exception": "/exception",
-  "exception_403": "/exception/403",
-  "exception_404": "/exception/404",
-  "exception_500": "/exception/500",
   "document": "/document",
   "document_project": "/document/project",
   "document_project-link": "/document/project-link",
@@ -159,6 +155,10 @@ const routeMap: RouteMap = {
   "404": "/404",
   "500": "/500",
   "about": "/about",
+  "exception": "/exception",
+  "exception_403": "/exception/403",
+  "exception_404": "/exception/404",
+  "exception_500": "/exception/500",
   "function": "/function",
   "function_hide-child": "/function/hide-child",
   "function_hide-child_one": "/function/hide-child/one",

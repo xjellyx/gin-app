@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"gin-app/internal/domain/response"
+	"gin-app/internal/domain/types"
 	"io"
 	"log/slog"
+	"strconv"
 	"strings"
 	"time"
 
@@ -102,7 +104,7 @@ func HandlerHeadersCtx() gin.HandlerFunc {
 	}
 }
 
-func HandlerAuth() gin.HandlerFunc {
+func HandlerAuth(isSelf bool) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
@@ -127,16 +129,24 @@ func HandlerAuth() gin.HandlerFunc {
 			})
 			return
 		}
-		//for _, v := range cla.RolesId {
-		//	ok, err := bootstrap.GlobalApp.Casbin.Enforce(usecase.CasbinRoleKey, v, ctx.Request.URL.Path, ctx.Request.Method)
-		//	if err != nil || !ok {
-		//		ctx.AbortWithStatusJSON(401, gin.H{
-		//			"code": serror.ErrUnauthorized,
-		//			"msg":  msg,
-		//		})
-		//		return
-		//	}
-		//}
+		if !isSelf {
+			var hasPermission bool
+			for _, v := range cla.RolesId {
+				// 判断是否有权限
+				ok, _ := bootstrap.GlobalApp.Casbin.Enforce(string(types.CasbinRoleKey), strconv.Itoa(int(v)), ctx.Request.URL.Path, ctx.Request.Method)
+				if ok {
+					hasPermission = true
+					break
+				}
+			}
+			if !hasPermission {
+				ctx.AbortWithStatusJSON(401, gin.H{
+					"code": serror.ErrUnauthorized,
+					"msg":  msg,
+				})
+				return
+			}
+		}
 
 		ctx.Request = ctx.Request.WithContext(scontext.SetUserUuid(ctx.Request.Context(), cla.UserUuid))
 		ctx.Request = ctx.Request.WithContext(scontext.SetUsername(ctx.Request.Context(), cla.Username))

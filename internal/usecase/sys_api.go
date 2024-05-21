@@ -5,6 +5,7 @@ import (
 	"gin-app/internal/domain"
 	"gin-app/internal/domain/response"
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 	"sort"
 	"time"
 )
@@ -25,7 +26,7 @@ func NewSysAPIUsecase(cfg SysAPIConfig) domain.SysAPIUsecase {
 }
 
 func (u *sysApiUsecase) GetSysAPITree(ctx context.Context) (response.SysAPITreeRespList, error) {
-	sysAPIs, err := u.cfg.Repo.Find(ctx)
+	sysAPIs, err := u.cfg.Repo.Find(ctx, clause.Eq{Column: "white", Value: false})
 	if err != nil {
 		return nil, err
 	}

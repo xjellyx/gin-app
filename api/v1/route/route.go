@@ -22,10 +22,11 @@ func Setup(app *bootstrap.Application, timeout time.Duration) *http.Server {
 	publicRouter.GET("/docs/*any", ginswagger.WrapHandler(swagfiles.Handler))
 	publicRouter.Use(middleware.HandlerHeadersCtx(), middleware.HandlerError())
 	ctrl.SetupUserSignRoute(app, timeout, publicRouter)
-	if app.Conf.JWT.Enable {
-		publicRouter.Use(middleware.HandlerAuth())
-	}
+
 	ctrl.SetupUserHimSelfRoute(app, timeout, publicRouter)
+	if app.Conf.JWT.Enable {
+		publicRouter.Use(middleware.HandlerAuth(false))
+	}
 	ctrl.SetupUserAdminRoute(app, timeout, publicRouter)
 	ctrl.SetupRoleRoute(app, timeout, publicRouter)
 	ctrl.SetupMenuRoute(app, timeout, publicRouter)

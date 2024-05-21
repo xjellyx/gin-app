@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"gin-app/internal/domain/response"
 	"gin-app/internal/domain/types"
 	"github.com/casbin/casbin/v2"
@@ -82,6 +81,7 @@ func (u *userHimSelfUsecase) GetMenusTree(ctx context.Context, code string) (*re
 	if len(policiesHomePage) > 0 {
 		ret.Home = policiesHomePage[0][2]
 	}
+
 	policies := u.cfg.Casbin.GetFilteredPolicy(0, string(types.CasbinRoleMenuKey), strconv.Itoa(int(role.ID)))
 	if len(policies) == 0 {
 		return ret, nil
@@ -101,10 +101,8 @@ func (u *userHimSelfUsecase) GetMenusTree(ctx context.Context, code string) (*re
 		return ret, nil
 	}
 	for _, v := range menus {
-		fmt.Println("2222", v)
 		ret.Routes = append(ret.Routes, domain.MenuModel2UserMenuResp(v))
 	}
 	ret.Routes = response.BuildMenuTree(ret.Routes)
-	fmt.Println("sssssss", ret.Routes[0])
 	return ret, nil
 }

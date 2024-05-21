@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios';
+import type { AxiosResponse  } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
@@ -10,11 +10,12 @@ import type { RequestInstanceState } from './type';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
+export const  request = createFlatRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL,
+    timeout: 10000,
     headers: {
-      apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
+      'Content-Type': 'application/json',
     }
   },
   {
@@ -35,7 +36,6 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     },
     async onBackendFail(response, instance) {
       const authStore = useAuthStore();
-
       function handleLogout() {
         authStore.resetStore();
       }
@@ -101,9 +101,13 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     onError(error) {
       // when the request is fail, you can show error message
 
+      if (error.response.status ===401){
+        const authStore = useAuthStore();
+        authStore.resetStore();
+        return;
+      }
       let message = error.message;
       let backendErrorCode = '';
-
       // get backend error message and code
       if (error.code === BACKEND_ERROR_CODE) {
         message = error.response?.data?.msg || message;
@@ -126,7 +130,6 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     }
   }
 );
-
 export const demoRequest = createRequest<App.Service.DemoResponse>(
   {
     baseURL: otherBaseURL.demo

@@ -1,6 +1,7 @@
 package ctrl
 
 import (
+	"gin-app/api/v1/middleware"
 	"time"
 
 	"gin-app/internal/bootstrap"
@@ -27,6 +28,7 @@ func SetupUserHimSelfRoute(app *bootstrap.Application, timeout time.Duration, gr
 		Casbin:         app.Casbin,
 		ContextTimeout: timeout})
 	h := group.Group("/user")
+	h.Use(middleware.HandlerAuth(true))
 	h.GET("/info", ctl.GetUserInfo)
 	h.GET("/menus", ctl.GetMenusTree)
 }

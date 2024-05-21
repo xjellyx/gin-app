@@ -99,7 +99,7 @@ func autoCreateRestfulAPIByDoc(db *gorm.DB) error {
 					data := &domain.SysAPI{Summary: val.(map[string]any)["summary"].(string)}
 					data.Tag = tag.(string)
 					if data.Tag == "UserHimSelf" || data.Tag == "UserSign 用户注册登录" {
-						continue
+						data.White = true
 					}
 
 					cond := &domain.SysAPI{Path: k, Method: method, Tag: data.Tag}

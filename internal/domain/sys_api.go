@@ -14,6 +14,7 @@ type SysAPI struct {
 	Summary string `gorm:"size:1024;comment:说明"`
 	Tag     string `gorm:"size:1024;comment:tag"`
 	Title   string `gorm:"size:256;comment:名称信息"`
+	White   bool   `gorm:"default:false;comment:是否白名单"`
 }
 
 type SysAPIRepo interface {

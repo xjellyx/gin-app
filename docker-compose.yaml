@@ -3,10 +3,59 @@ version: "3.9"
 services:
   app:
     image: gin-app/server
-    network_mode: bridge
+    restart: always
+    container_name: je-app
+    networks:
+      - je_app
+    env_file:
+      - .env
     volumes:
       - "./config:/app/config"
       - "./log:/app/log"
     ports:
       - "8888:8888"
     command: ./server
+    depends_on:
+      - redis
+      - db
+  redis:
+    image: redis:7-alpine
+    container_name: je-redis
+    networks:
+      - je_app
+    restart: always
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "/etc/redis.conf", "--appendonly", "yes" ]
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/etc/redis.conf
+    healthcheck:
+      test: "redis-cli -h 127.0.0.1 -p 6379 info Replication"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  db:
+    image: postgis/postgis
+    container_name: je-db
+    restart: always
+    networks:
+     - je_app
+    healthcheck:
+      test: "exit 0"
+    ports:
+      - "54318:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=app
+      - TZ=Asia/Shanghai
+      - PGTZ=Asia/Shanghai
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - "./data:/var/lib/postgresql/data"
+
+networks:
+  je_app:
+    driver: bridge
