@@ -97,14 +97,14 @@ function handleDropdown(key: DropdownKey) {
   }
 }
 // 切换角色，刷新整个应用
-function handleRoleChange() {
+async function handleRoleChange() {
   const currentRole =localStg.get('currentRole')
   if(currentRole===roleCode.value) {
     showDrawer.value=false
     return
   }
   localStg.set('currentRole',roleCode.value)
-  routeStore.initAuthRoute()
+  await routeStore.initAuthRoute()
   showDrawer.value=false
   window.location.reload()
 }
@@ -118,7 +118,7 @@ function handleRoleChange() {
     <div>
       <ButtonIcon>
         <SvgIcon icon="ph:user-circle" class="text-icon-large" />
-        <span class="text-16px font-medium">{{ authStore.userInfo.userName }}</span>
+        <span class="text-16px font-medium">{{ authStore.userInfo.username }}</span>
       </ButtonIcon>
     </div>
   </NDropdown>
