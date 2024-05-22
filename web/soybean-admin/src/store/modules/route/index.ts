@@ -12,6 +12,7 @@ import { fetchGetConstantRoutes, fetchGetUserRoutes, fetchIsRouteExist } from '@
 import { useAppStore } from '../app';
 import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
+import {customRoutes} from "@/router/routes";
 import {
   filterAuthRoutesByRoles,
   getBreadcrumbsByRoute,
@@ -189,7 +190,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       const { data, error } = await fetchGetConstantRoutes();
 
       if (!error) {
-        addConstantRoutes(data);
+        addConstantRoutes([...data,...customRoutes]);
       }
     }
 
@@ -208,7 +209,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
           return
         }
       const roleCode = localStg.get('currentRole')
-      await initDynamicAuthRoute( roleCode);
+      if (roleCode){
+        await initDynamicAuthRoute( roleCode);
+      }else{
+        await initDynamicAuthRoute();
+      }
+
     }
     tabStore.initHomeTab();
   }
@@ -226,12 +232,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     }
 
     handleConstantAndAuthRoutes();
-
     setIsInitAuthRoute(true);
   }
 
   /** Init dynamic auth route */
   async function initDynamicAuthRoute(roleCode?: string) {
+    if (!roleCode){
+      roleCode=""
+    }
     const { data, error } = await fetchGetUserRoutes(roleCode);
     if (!error) {
       const { routes, home } = data;

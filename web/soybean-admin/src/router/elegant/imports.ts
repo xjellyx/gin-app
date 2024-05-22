@@ -17,6 +17,7 @@ export const layouts: Record<RouteLayout, RouteComponent | (() => Promise<RouteC
 export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<RouteComponent>)> = {
   "iframe-page": () => import("@/views/_builtin/iframe-page/[url].vue"),
   login: () => import("@/views/_builtin/login/index.vue"),
+  about: () => import("@/views/about/index.vue"),
   exception_403: () => import("@/views/exception/403/index.vue"),
   exception_404: () => import("@/views/exception/404/index.vue"),
   exception_500: () => import("@/views/exception/500/index.vue"),

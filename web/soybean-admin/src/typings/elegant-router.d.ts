@@ -17,6 +17,7 @@ declare module "@elegant-router/types" {
   export type RouteMap = {
     "root": "/";
     "not-found": "/:pathMatch(.*)*";
+    "about": "/about";
     "exception": "/exception";
     "exception_403": "/exception/403";
     "exception_404": "/exception/404";
@@ -61,6 +62,7 @@ declare module "@elegant-router/types" {
    */
   export type FirstLevelRouteKey = Extract<
     RouteKey,
+    | "about"
     | "exception"
     | "home"
     | "iframe-page"
@@ -85,6 +87,7 @@ declare module "@elegant-router/types" {
     RouteKey,
     | "iframe-page"
     | "login"
+    | "about"
     | "exception_403"
     | "exception_404"
     | "exception_500"

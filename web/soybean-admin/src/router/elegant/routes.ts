@@ -7,6 +7,15 @@ import type { GeneratedRoute } from '@elegant-router/types';
 
 export const generatedRoutes: GeneratedRoute[] = [
   {
+    name: 'about',
+    path: '/about',
+    component: 'layout.base$view.about',
+    meta: {
+      title: 'about',
+      i18nKey: 'route.about'
+    }
+  },
+  {
     name: 'exception',
     path: '/exception',
     component: 'layout.base',

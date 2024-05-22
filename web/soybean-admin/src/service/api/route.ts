@@ -2,7 +2,7 @@ import { request } from '../request';
 
 /** get constant routes */
 export function fetchGetConstantRoutes() {
-  return request<Api.Route.UserRoute>({
+  return request<Array<Api.Route.MenuRoute>>({
     url: 'menus/constant/tree',
     method: 'get',
   });
