@@ -19,7 +19,7 @@ export function fetchAddRole(data: any) {
 }
 
 /** edit role */
-export function fetchEditRole(id: any,data: any) {
+export function fetchEditRole(id: any, data: any) {
   return request<Api.SystemManage.Role>({
     url: `/roles/${id}`,
     method: 'put',
@@ -60,52 +60,51 @@ export function fetchGetUserRoles(id: Number) {
   return request({
     url: `/user/roles`,
     method: 'get'
-  })
-
+  });
 }
 
-export function fetchAddRoleMenuPerm(data: any){
+export function fetchAddRoleMenuPerm(data: any) {
   return request({
-    url: "roles/menu",
-    method: "post",
+    url: 'roles/menu',
+    method: 'post',
     data
-  })
+  });
 }
 export function fetchGetRoleMenuPerm(id: Number) {
   return request({
-    url:`/roles/${id}/menu`,
-    method: "get"
-  })
+    url: `/roles/${id}/menu`,
+    method: 'get'
+  });
 }
 
 export function fetchGetRolePerm(id: Number) {
   return request({
     url: `/roles/${id}/perm`,
     method: 'get'
-  })
+  });
 }
 
-export function fetchAddRolePerm(data: any){
+export function fetchAddRolePerm(data: any) {
   return request({
-    url: "roles/perm",
-    method: "post",
+    url: 'roles/perm',
+    method: 'post',
     data
-  })
+  });
 }
 
 export function fetchGetRoleFrontPage(id: Number) {
   return request({
     url: `/roles/${id}/front-page`,
     method: 'get'
-  })
+  });
 }
 
-export function fetchAddRoleFrontPage(data: any){
+export function fetchAddRoleFrontPage(data: any) {
   return request({
-    url: "roles/front-page",
-    method: "post",
+    url: 'roles/front-page',
+    method: 'post',
     data
-  })
+  });
 }
 
 /** get user list */
@@ -125,7 +124,7 @@ export function fetchAddUser(data: any) {
   });
 }
 /** edit user */
-export function fetchEditUser(id: any,data: any) {
+export function fetchEditUser(id: any, data: any) {
   return request<Api.SystemManage.User>({
     url: `/users/${id}`,
     method: 'put',
@@ -145,7 +144,7 @@ export function fetchBatchDeleteUser(ids: any) {
   return request<Api.SystemManage.User>({
     url: `/users`,
     method: 'delete',
-    data:ids
+    data: ids
   });
 }
 
@@ -189,7 +188,7 @@ export function fetchAddMenu(data: any) {
   });
 }
 
-export function fetchEditMenu(id: any,data: any) {
+export function fetchEditMenu(id: any, data: any) {
   return request<Api.SystemManage.Menu>({
     url: `/menus/${id}`,
     method: 'put',
@@ -208,7 +207,7 @@ export function fetchBatchDeleteMenu(ids: any) {
   return request<Api.SystemManage.Menu>({
     url: `/menus`,
     method: 'delete',
-    data:ids
+    data: ids
   });
 }
 
@@ -226,5 +225,3 @@ export function fetchAddMenuPerm(data: any) {
     data
   });
 }
-
-

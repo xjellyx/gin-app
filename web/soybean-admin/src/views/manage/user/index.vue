@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetUserList,fetchDeleteUser,fetchBatchDeleteUser } from '@/service/api';
+import { fetchBatchDeleteUser, fetchDeleteUser, fetchGetUserList } from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';

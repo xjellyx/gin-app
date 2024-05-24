@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchGetRoleList,fetchDeleteRole,fetchBatchDeleteRole } from '@/service/api';
+import { fetchBatchDeleteRole, fetchDeleteRole, fetchGetRoleList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';

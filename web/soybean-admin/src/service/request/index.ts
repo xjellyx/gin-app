@@ -1,4 +1,4 @@
-import type { AxiosResponse  } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
@@ -10,12 +10,12 @@ import type { RequestInstanceState } from './type';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-export const  request = createFlatRequest<App.Service.Response, RequestInstanceState>(
+export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL,
     timeout: 10000,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     }
   },
   {
@@ -101,7 +101,7 @@ export const  request = createFlatRequest<App.Service.Response, RequestInstanceS
     onError(error) {
       // when the request is fail, you can show error message
 
-      if (error.response.status ===401){
+      if (error.response.status === 401) {
         const authStore = useAuthStore();
         authStore.resetStore();
         return;

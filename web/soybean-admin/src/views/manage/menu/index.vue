@@ -1,9 +1,9 @@
- <script setup lang="tsx">
+<script setup lang="tsx">
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { fetchGetAllPages, fetchGetMenuList,fetchDeleteMenu,fetchBatchDeleteMenu } from '@/service/api';
+import { fetchBatchDeleteMenu, fetchDeleteMenu, fetchGetAllPages, fetchGetMenuList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -155,8 +155,11 @@ const { columns, columnChecks, data, loading, pagination, getData } = useTable({
           <NButton type="primary" ghost size="small" onClick={() => handleEdit(row)}>
             {$t('common.edit')}
           </NButton>
-          {Number(row.menuType) === 2 && (<NButton  type="primary" ghost size="small" onClick={() => handleEditApiPerm(row)}>
-            {$t('common.apiPerm')} </NButton>)}
+          {Number(row.menuType) === 2 && (
+            <NButton type="primary" ghost size="small" onClick={() => handleEditApiPerm(row)}>
+              {$t('common.apiPerm')}{' '}
+            </NButton>
+          )}
           <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
             {{
               default: () => $t('common.confirmDelete'),
@@ -184,7 +187,7 @@ function handleAdd() {
 
 async function handleBatchDelete() {
   // request
- await fetchBatchDeleteMenu(checkedRowKeys.value);
+  await fetchBatchDeleteMenu(checkedRowKeys.value);
 
   onBatchDeleted();
 }
@@ -210,7 +213,7 @@ const menuId = ref(0);
 
 function handleEditApiPerm(item: Api.SystemManage.Menu) {
   menuId.value = item.id;
-  openSysApiAuthModal()
+  openSysApiAuthModal();
 }
 
 function handleAddChildMenu(item: Api.SystemManage.Menu) {
@@ -270,7 +273,7 @@ init();
         @submitted="getData"
       />
     </NCard>
-    <SysApiAuthModal v-model:visible="sysApiAuthVisible" :menuId="menuId"></SysApiAuthModal>
+    <SysApiAuthModal v-model:visible="sysApiAuthVisible" :menu-id="menuId"></SysApiAuthModal>
   </div>
 </template>
 

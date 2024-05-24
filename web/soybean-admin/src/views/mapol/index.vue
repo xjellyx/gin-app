@@ -1,84 +1,69 @@
-<template>
-    <div id="map" class="map">
-      <div v-if="coords" class="coordinates" >
-        <button @click="copyCoords">{{ coords.lon }},{{ coords.lat }}</button>
-      </div>
-    </div>
-
-</template>
-
 <script lang="ts" setup>
-import {ref} from "vue";
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import 'ol/ol.css';
 import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import {get as getProjection}  from 'ol/proj';
+import { fromLonLat, get as getProjection, toLonLat } from 'ol/proj';
 import WMTS from 'ol/source/WMTS';
-import WMTSTileGrid from 'ol/tilegrid/WMTS'
-import {getTopLeft, getWidth} from 'ol/extent';
-import { fromLonLat,toLonLat  } from 'ol/proj';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { getTopLeft, getWidth } from 'ol/extent';
 
 const projection = getProjection('EPSG:3857');
 const projectionExtent = projection.getExtent();
 const size = getWidth(projectionExtent) / 256;
-const resolutions = new Array(19);
-const matrixIds = new Array(19);
+const resolutions = Array.from({ length: 19 });
+const matrixIds = Array.from({ length: 19 });
 for (let z = 0; z < 19; ++z) {
   // generate resolutions and matrixIds arrays for this WMTS
-  resolutions[z] = size / Math.pow(2, z);
+  resolutions[z] = size / 2 ** z;
   matrixIds[z] = z;
 }
 const coords = ref<{ lat: number; lon: number } | null>(null);
 const mapDiv = ref<HTMLDivElement | null>(null);
-mapDiv.value='map'
+mapDiv.value = 'map';
 
 const copyCoords = () => {
   if (coords.value) {
     const text = `${coords.value.lon},${coords.value.lat}`;
-    navigator.clipboard.writeText(text).then(() => {
-    });
+    navigator.clipboard.writeText(text).then(() => {});
   }
 };
 
-function usgsWmts(){
-
-  return  new WMTS({
-    attributions:
-      'Tiles © <a href="https://mrdata.usgs.gov/geology/state/"' +
-      ' target="_blank">USGS</a>',
+function usgsWmts() {
+  return new WMTS({
+    attributions: 'Tiles © <a href="https://mrdata.usgs.gov/geology/state/"' + ' target="_blank">USGS</a>',
     url: 'https://mrdata.usgs.gov/mapcache/wmts',
     layer: 'sgmc2',
     matrixSet: 'GoogleMapsCompatible',
     format: 'image/png',
-    projection: projection,
+    projection,
     tileGrid: new WMTSTileGrid({
       origin: getTopLeft(projectionExtent),
-      resolutions: resolutions,
-      matrixIds: matrixIds,
+      resolutions,
+      matrixIds
     }),
     style: 'default',
-    wrapX: true,
+    wrapX: true
   });
 }
-function tiandiWmts(){
-  return  new WMTS({
+function tiandiWmts() {
+  return new WMTS({
     url: 'https://t2.tianditu.gov.cn/img_w/wmts?tk=ce0125d2666eba13871c6f22bc456d3b&TILEMATRIXSET=w',
-    service:'WMTS',
+    service: 'WMTS',
     request: 'GetTile',
     version: '1.0.0',
     layer: 'img',
     style: 'default',
     format: 'tiles',
-    projection: projection,
+    projection,
     tileGrid: new WMTSTileGrid({
       origin: getTopLeft(projectionExtent),
-      resolutions: resolutions,
-      matrixIds: matrixIds,
+      resolutions,
+      matrixIds
     }),
-    wrapX: true,
-  })
+    wrapX: true
+  });
 }
 
 onMounted(() => {
@@ -87,28 +72,34 @@ onMounted(() => {
       target: mapDiv.value,
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new OSM()
         }),
         new TileLayer({
           opacity: 0.7,
-          source: tiandiWmts(),
-        }),
+          source: tiandiWmts()
+        })
       ],
       view: new View({
         center: fromLonLat([116.404, 39.915]), // 北京坐标
-        zoom: 4,
-      }),
+        zoom: 4
+      })
     });
-    map.on('click', (event) => {
+    map.on('click', event => {
       const [lon, lat] = toLonLat(event.coordinate);
       coords.value = { lat, lon };
-      mapDiv.value=null
+      mapDiv.value = null;
     });
-
   }
-
-    });
+});
 </script>
+
+<template>
+  <div id="map" class="map">
+    <div v-if="coords" class="coordinates">
+      <button @click="copyCoords">{{ coords.lon }},{{ coords.lat }}</button>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 #map {

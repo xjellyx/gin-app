@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed,ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { VNode } from 'vue';
 import { useAuthStore } from '@/store/modules/auth';
-import {useRouteStore} from "@/store/modules/route";
+import { useRouteStore } from '@/store/modules/route';
 import { useRouterPush } from '@/hooks/common/router';
 import { useSvgIcon } from '@/hooks/common/icon';
 import { $t } from '@/locales';
-import {fetchGetUserRoles} from "@/service/api";
-import {localStg} from "@/utils/storage";
+import { fetchGetUserRoles } from '@/service/api';
+import { localStg } from '@/utils/storage';
 
 defineOptions({
   name: 'UserAvatar'
@@ -22,7 +22,7 @@ function loginOrRegister() {
 }
 const showDrawer = ref(false);
 type DropdownKey = 'user-center' | 'logout';
-const roleCode = ref(localStg.get("currentRole"));
+const roleCode = ref(localStg.get('currentRole'));
 type DropdownOption =
   | {
       key: DropdownKey;
@@ -50,7 +50,7 @@ async function getRoleOptions() {
 const options = computed(() => {
   const opts: DropdownOption[] = [
     {
-      label:"切换角色",
+      label: '切换角色',
       icon: SvgIconVNode({ icon: 'ph:user-switch', fontSize: 18 }),
       key: 'switch-role'
     },
@@ -86,27 +86,27 @@ function logout() {
 }
 
 function handleDropdown(key: DropdownKey) {
-  console.log("key", key)
+  console.log('key', key);
   if (key === 'logout') {
     logout();
-  }else if (key === 'switch-role') {
-    showDrawer.value=true
-    getRoleOptions()
+  } else if (key === 'switch-role') {
+    showDrawer.value = true;
+    getRoleOptions();
   } else {
     routerPushByKey(key);
   }
 }
 // 切换角色，刷新整个应用
 async function handleRoleChange() {
-  const currentRole =localStg.get('currentRole')
-  if(currentRole===roleCode.value) {
-    showDrawer.value=false
-    return
+  const currentRole = localStg.get('currentRole');
+  if (currentRole === roleCode.value) {
+    showDrawer.value = false;
+    return;
   }
-  localStg.set('currentRole',roleCode.value)
-  await routeStore.initAuthRoute()
-  showDrawer.value=false
-  window.location.reload()
+  localStg.set('currentRole', roleCode.value);
+  await routeStore.initAuthRoute();
+  showDrawer.value = false;
+  window.location.reload();
 }
 </script>
 
@@ -122,14 +122,14 @@ async function handleRoleChange() {
       </ButtonIcon>
     </div>
   </NDropdown>
-  <n-drawer v-model:show="showDrawer" :width="150" >
+  <NDrawer v-model:show="showDrawer" :width="150">
     <NSelect
       v-model:value="roleCode"
       :options="roleOptions"
-      @update:value="handleRoleChange"
       :placeholder="$t('page.manage.user.form.userRole')"
+      @update:value="handleRoleChange"
     />
-  </n-drawer>
+  </NDrawer>
 </template>
 
 <style scoped></style>

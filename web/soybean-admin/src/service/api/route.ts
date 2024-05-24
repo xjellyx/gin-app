@@ -4,7 +4,7 @@ import { request } from '../request';
 export function fetchGetConstantRoutes() {
   return request<Array<Api.Route.MenuRoute>>({
     url: 'menus/constant/tree',
-    method: 'get',
+    method: 'get'
   });
 }
 
@@ -14,7 +14,7 @@ export function fetchGetUserRoutes(code: string) {
     url: '/user/menus',
     method: 'get',
     params: {
-      code:code
+      code
     }
   });
 }

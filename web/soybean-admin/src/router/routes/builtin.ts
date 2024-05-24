@@ -1,7 +1,7 @@
-import type { CustomRoute,ElegantRoute } from '@elegant-router/types';
+import type { CustomRoute, ElegantRoute } from '@elegant-router/types';
+import { GeneratedRoute } from '@elegant-router/types';
 import { layouts, views } from '../elegant/imports';
 import { getRoutePath, transformElegantRoutesToVueRoutes } from '../elegant/transform';
-import {GeneratedRoute} from "@elegant-router/types";
 
 export const ROOT_ROUTE: CustomRoute = {
   name: 'root',
@@ -10,7 +10,7 @@ export const ROOT_ROUTE: CustomRoute = {
   meta: {
     title: 'root',
     constant: true
-  },
+  }
 };
 
 const NOT_FOUND_ROUTE: CustomRoute = {
@@ -30,4 +30,3 @@ const builtinRoutes: CustomRoute[] = [ROOT_ROUTE, NOT_FOUND_ROUTE];
 export function createBuiltinVueRoutes() {
   return transformElegantRoutesToVueRoutes(builtinRoutes, layouts, views);
 }
-

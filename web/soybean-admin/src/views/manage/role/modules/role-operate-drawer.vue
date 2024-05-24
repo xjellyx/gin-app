@@ -4,10 +4,10 @@ import { useBoolean } from '@sa/hooks';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
-import {fetchAddRole,fetchEditRole } from '@/service/api/system-manage';
+import { fetchAddRole, fetchEditRole } from '@/service/api/system-manage';
 import MenuAuthModal from './menu-auth-modal.vue';
 import ButtonAuthModal from './button-auth-modal.vue';
-import SysApiAuthModal from "./api-auth-modal.vue";
+import SysApiAuthModal from './api-auth-modal.vue';
 
 defineOptions({
   name: 'RoleOperateDrawer'
@@ -36,7 +36,7 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 const { defaultRequiredRule } = useFormRules();
 const { bool: menuAuthVisible, setTrue: openMenuAuthModal } = useBoolean();
 const { bool: buttonAuthVisible, setTrue: openButtonAuthModal } = useBoolean();
-const {bool: sysApiAuthModalVisible,setTrue: openSysApiAuthModal} =useBoolean();
+const { bool: sysApiAuthModalVisible, setTrue: openSysApiAuthModal } = useBoolean();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
@@ -87,9 +87,9 @@ async function handleSubmit() {
   await validate();
   // request
   if (props.operateType === 'add') {
-      await fetchAddRole(model);
-  }else {
-    await fetchEditRole(roleId.value,model);
+    await fetchAddRole(model);
+  } else {
+    await fetchEditRole(roleId.value, model);
   }
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
@@ -116,7 +116,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.manage.role.roleStatus')" path="status">
           <NRadioGroup v-model:value="model.status">
-            <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="Number(item.value)" :label="$t(item.label)" />
+            <NRadio
+              v-for="item in enableStatusOptions"
+              :key="item.value"
+              :value="Number(item.value)"
+              :label="$t(item.label)"
+            />
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.role.roleDesc')" path="roleDesc">
@@ -128,8 +133,8 @@ watch(visible, () => {
         <MenuAuthModal v-model:visible="menuAuthVisible" :role-id="roleId" />
         <NButton @click="openButtonAuthModal">{{ $t('page.manage.role.buttonAuth') }}</NButton>
         <ButtonAuthModal v-model:visible="buttonAuthVisible" :role-id="roleId" />
-        <NButton @click="openSysApiAuthModal">{{$t('page.manage.role.apiAuth')}}</NButton>
-        <SysApiAuthModal v-model:visible="sysApiAuthModalVisible" :role-id="roleId"/>
+        <NButton @click="openSysApiAuthModal">{{ $t('page.manage.role.apiAuth') }}</NButton>
+        <SysApiAuthModal v-model:visible="sysApiAuthModalVisible" :role-id="roleId" />
       </NSpace>
       <template #footer>
         <NSpace :size="16">

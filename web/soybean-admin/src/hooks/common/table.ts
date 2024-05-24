@@ -51,7 +51,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
         data: recordsWithIndex,
         pageNum: pagination.pageNum,
         pageSize: pagination.pageSize,
-        total: pagination.total,
+        total: pagination.total
       };
     },
     getColumnChecks: cols => {
@@ -104,8 +104,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       const { pageNum, pageSize, total } = transformed;
 
       updatePagination({
-        pageNum: pageNum,
-        pageSize: pageSize,
+        pageNum,
+        pageSize,
         itemCount: total
       });
     },
@@ -121,7 +121,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       pagination.pageNum = pageNum;
 
       updateSearchParams({
-        pageNum: pageNum,
+        pageNum,
         pageSize: pagination.pageSize!
       });
 
@@ -133,7 +133,7 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
 
       updateSearchParams({
         pageNum: pagination.pageNum,
-        pageSize: pageSize
+        pageSize
       });
 
       getData();

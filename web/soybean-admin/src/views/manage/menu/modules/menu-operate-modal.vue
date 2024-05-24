@@ -1,12 +1,12 @@
 <script setup lang="tsx">
-import {computed, onMounted, reactive, ref, watch} from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
-import { fetchGetAllRoles,fetchAddMenu,fetchEditMenu } from '@/service/api';
+import { fetchAddMenu, fetchEditMenu, fetchGetAllRoles } from '@/service/api';
 import {
   getLayoutAndPage,
   getPathParamFromRoutePath,
@@ -122,7 +122,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   routePath: defaultRequiredRule,
   layout: {
     required: props.operateType === 'add',
-    message:$t('form.required'),
+    message: $t('form.required')
   }
 };
 
@@ -140,7 +140,7 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 }));
 
 const showLayout = computed(() => model.parentId === 0);
-const showPage = computed(() => Number( model.menuType ) === 2 );
+const showPage = computed(() => Number(model.menuType) === 2);
 
 const pageOptions = computed(() => {
   const allPages = [...props.allPages];
@@ -189,7 +189,7 @@ function handleInitModel() {
 
   if (props.operateType === 'addChild') {
     const { id } = props.rowData;
-    model.routeName = props.rowData?.routeName +"_";
+    model.routeName = `${props.rowData?.routeName}_`;
     Object.assign(model, { parentId: id });
   }
 
@@ -256,7 +256,7 @@ async function handleSubmit() {
 
   const params = getSubmitParams();
   if (props.operateType === 'edit') {
-    await fetchEditMenu(params.id,params);
+    await fetchEditMenu(params.id, params);
   } else {
     await fetchAddMenu(params);
   }
@@ -295,22 +295,27 @@ watch(
         <NGrid responsive="screen" item-responsive>
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.menuType')" path="menuType">
             <NRadioGroup v-model:value="model.menuType" :disabled="disabledMenuType">
-              <NRadio v-for="item in menuTypeOptions" :key="item.value" :value="Number(item.value)" :label="$t(item.label)" />
+              <NRadio
+                v-for="item in menuTypeOptions"
+                :key="item.value"
+                :value="Number(item.value)"
+                :label="$t(item.label)"
+              />
             </NRadioGroup>
           </NFormItemGi>
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.menuName')" path="menuName">
             <NInput v-model:value="model.menuName" :placeholder="$t('page.manage.menu.form.menuName')" />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.routeName')" path="routeName">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.routeName')" path="routeName">
             <NInput v-model:value="model.routeName" :placeholder="$t('page.manage.menu.form.routeName')" />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.routePath')" path="routePath">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.routePath')" path="routePath">
             <NInput v-model:value="model.routePath" disabled :placeholder="$t('page.manage.menu.form.routePath')" />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.pathParam')" path="pathParam">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.pathParam')" path="pathParam">
             <NInput v-model:value="model.pathParam" :placeholder="$t('page.manage.menu.form.pathParam')" />
           </NFormItemGi>
-          <NFormItemGi v-if="showLayout " span="24 m:12" :label="$t('page.manage.menu.layout')" path="layout">
+          <NFormItemGi v-if="showLayout" span="24 m:12" :label="$t('page.manage.menu.layout')" path="layout">
             <NSelect
               v-model:value="model.layout"
               default-value="base"
@@ -318,7 +323,7 @@ watch(
               :placeholder="$t('page.manage.menu.form.layout')"
             />
           </NFormItemGi>
-          <NFormItemGi  v-if="showPage " span="24 m:12" :label="$t('page.manage.menu.page')" path="page">
+          <NFormItemGi v-if="showPage" span="24 m:12" :label="$t('page.manage.menu.page')" path="page">
             <NSelect
               v-model:value="model.page"
               :options="pageOptions"
@@ -328,7 +333,7 @@ watch(
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.i18nKey')" path="i18nKey">
             <NInput v-model:value="model.i18nKey" :placeholder="$t('page.manage.menu.form.i18nKey')" />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.order')" path="order">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.order')" path="order">
             <NInputNumber v-model:value="model.order" class="w-full" :placeholder="$t('page.manage.menu.form.order')" />
           </NFormItemGi>
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.iconTypeTitle')" path="iconType">
@@ -367,13 +372,13 @@ watch(
               />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.keepAlive')" path="keepAlive">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.keepAlive')" path="keepAlive">
             <NRadioGroup v-model:value="model.keepAlive">
               <NRadio value :label="$t('common.yesOrNo.yes')" />
               <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.constant')" path="constant">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.constant')" path="constant">
             <NRadioGroup v-model:value="model.constant">
               <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
               <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
@@ -382,7 +387,7 @@ watch(
           <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.href')" path="href">
             <NInput v-model:value="model.href" :placeholder="$t('page.manage.menu.form.href')" />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.hideInMenu')" path="hideInMenu">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.hideInMenu')" path="hideInMenu">
             <NRadioGroup v-model:value="model.hideInMenu">
               <!-- eslint-disable-next-line vue/prefer-true-attribute-shorthand -->
               <NRadio :value="true" :label="$t('common.yesOrNo.yes')" />
@@ -402,13 +407,13 @@ watch(
               :placeholder="$t('page.manage.menu.form.activeMenu')"
             />
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.multiTab')" path="multiTab">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.multiTab')" path="multiTab">
             <NRadioGroup v-model:value="model.multiTab">
               <NRadio value :label="$t('common.yesOrNo.yes')" />
               <NRadio :value="false" :label="$t('common.yesOrNo.no')" />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi  span="24 m:12" :label="$t('page.manage.menu.fixedIndexInTab')" path="fixedIndexInTab">
+          <NFormItemGi span="24 m:12" :label="$t('page.manage.menu.fixedIndexInTab')" path="fixedIndexInTab">
             <NInputNumber
               v-model:value="model.fixedIndexInTab"
               class="w-full"
@@ -416,7 +421,7 @@ watch(
               :placeholder="$t('page.manage.menu.form.fixedIndexInTab')"
             />
           </NFormItemGi>
-          <NFormItemGi  span="24" :label="$t('page.manage.menu.query')">
+          <NFormItemGi span="24" :label="$t('page.manage.menu.query')">
             <NDynamicInput
               v-model:value="model.query"
               preset="pair"

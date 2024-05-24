@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { fetchGetAllRoles,fetchAddUser,fetchEditUser } from '@/service/api';
+import { fetchAddUser, fetchEditUser, fetchGetAllRoles } from '@/service/api';
 import { $t } from '@/locales';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
 
@@ -39,10 +39,7 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Pick<
-  Api.SystemManage.User,
-  'username' | 'gender' | 'nickName' | 'phone' | 'email' | 'roles' | 'status'
->;
+type Model = Pick<Api.SystemManage.User, 'username' | 'gender' | 'nickName' | 'phone' | 'email' | 'roles' | 'status'>;
 
 const model: Model = reactive(createDefaultModel());
 
@@ -97,10 +94,10 @@ async function handleSubmit() {
   // request
   if (props.operateType === 'add') {
     // add
-    await fetchAddUser( model);
+    await fetchAddUser(model);
   } else if (props.operateType === 'edit') {
     // edit
-    await fetchEditUser( props.rowData?.id,model);
+    await fetchEditUser(props.rowData?.id, model);
   }
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
@@ -125,12 +122,17 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.userGender')" path="userGender">
           <NRadioGroup v-model:value="model.gender">
-            <NRadio v-for="item in userGenderOptions" :key="item.value" :value="Number(item.value)" :label="$t(item.label)" />
+            <NRadio
+              v-for="item in userGenderOptions"
+              :key="item.value"
+              :value="Number(item.value)"
+              :label="$t(item.label)"
+            />
           </NRadioGroup>
         </NFormItem>
-<!--        <NFormItem :label="$t('page.manage.user.nickName')" path="nickName">-->
-<!--          <NInput v-model:value="model.nickName" :placeholder="$t('page.manage.user.form.nickName')" />-->
-<!--        </NFormItem>-->
+        <!--        <NFormItem :label="$t('page.manage.user.nickName')" path="nickName">-->
+        <!--          <NInput v-model:value="model.nickName" :placeholder="$t('page.manage.user.form.nickName')" />-->
+        <!--        </NFormItem>-->
         <NFormItem :label="$t('page.manage.user.userPhone')" path="userPhone">
           <NInput v-model:value="model.phone" :placeholder="$t('page.manage.user.form.userPhone')" />
         </NFormItem>
@@ -139,7 +141,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.userStatus')" path="status">
           <NRadioGroup v-model:value="model.status">
-            <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="Number(item.value)" :label="$t(item.label)" />
+            <NRadio
+              v-for="item in enableStatusOptions"
+              :key="item.value"
+              :value="Number(item.value)"
+              :label="$t(item.label)"
+            />
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.user.userRole')" path="roles">

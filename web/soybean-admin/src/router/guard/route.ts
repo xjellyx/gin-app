@@ -13,8 +13,7 @@ import { localStg } from '@/utils/storage';
 /**
  * create route guard
  *
- * @param router router instance
- s
+ * @param router router instance s
  */
 export function createRouteGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {

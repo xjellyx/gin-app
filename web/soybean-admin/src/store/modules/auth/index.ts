@@ -93,7 +93,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       // 2. store user info
       localStg.set('userInfo', info);
       // 3. store current role
-      if (info.roles.length >0){
+      if (info.roles.length > 0) {
         localStg.set('currentRole', info.roles[0]);
       }
       // 3. update store

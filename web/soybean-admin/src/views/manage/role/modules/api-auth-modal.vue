@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef, watch } from 'vue';
 import { $t } from '@/locales';
-import { fetchSysApiTree,fetchGetRolePerm,fetchAddRolePerm } from '@/service/api';
+import { fetchAddRolePerm, fetchGetRolePerm, fetchSysApiTree } from '@/service/api';
 
 defineOptions({
   name: 'SysApiAuthModal'
@@ -24,9 +24,7 @@ function closeModal() {
 
 const title = computed(() => $t('common.edit') + $t('page.manage.role.apiAuth'));
 
-
 const tree = shallowRef<Api.SystemManage.MenuTree[]>([]);
-
 
 async function getTree() {
   const { error, data } = await fetchSysApiTree();
@@ -39,7 +37,7 @@ const checks = shallowRef<number[]>([]);
 
 async function getChecks() {
   // request
-  const {  data } = await fetchGetRolePerm(props.roleId);
+  const { data } = await fetchGetRolePerm(props.roleId);
   if (!data) {
     return;
   }
@@ -52,7 +50,7 @@ async function handleSubmit() {
   await fetchAddRolePerm({
     roleId: props.roleId,
     apiIds: checks.value
-  })
+  });
   window.$message?.success?.($t('common.modifySuccess'));
 
   closeModal();

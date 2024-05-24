@@ -30,5 +30,5 @@ export function clearAuthStorage() {
   localStg.remove('token');
   localStg.remove('refreshToken');
   localStg.remove('userInfo');
-  localStg.remove('currentRole')
+  localStg.remove('currentRole');
 }
