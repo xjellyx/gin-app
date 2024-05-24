@@ -30,6 +30,7 @@ declare module "@elegant-router/types" {
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
+    "mapol": "/mapol";
     "user-center": "/user-center";
   };
 
@@ -68,6 +69,7 @@ declare module "@elegant-router/types" {
     | "iframe-page"
     | "login"
     | "manage"
+    | "mapol"
     | "user-center"
   >;
 
@@ -96,6 +98,7 @@ declare module "@elegant-router/types" {
     | "manage_role"
     | "manage_user-detail"
     | "manage_user"
+    | "mapol"
     | "user-center"
   >;
 

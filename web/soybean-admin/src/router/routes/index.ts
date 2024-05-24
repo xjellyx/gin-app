@@ -130,6 +130,16 @@ export const customRoutes: CustomRoute[] = [
       hideInMenu: true
     }
   },
+  {
+    name: 'mapol',
+    path: '/mapol',
+    component: 'layout.base$view.mapol',
+    meta: {
+      title: 'mapol',
+      i18nKey: 'route.mapol',
+      icon: 'carbon:map'
+    }
+  }
 ];
 
 /** create routes when the auth route mode is static */

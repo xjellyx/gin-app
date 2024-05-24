@@ -131,6 +131,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'mapol',
+    path: '/mapol',
+    component: 'layout.base$view.mapol',
+    meta: {
+      title: 'mapol',
+      i18nKey: 'route.mapol'
+    }
+  },
+  {
     name: 'user-center',
     path: '/user-center',
     component: 'layout.base$view.user-center',
