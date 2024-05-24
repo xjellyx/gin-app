@@ -19,6 +19,6 @@ bin/gin-app
 *.tar.gz
 run
 log
-.env
+./.env
 # Dependency directories (remove the comment below to include it)
 # vendor/
