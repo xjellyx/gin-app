@@ -91,7 +91,7 @@ onMounted(() => {
           opacity: 0.7,
           source: tiandiWmts()
         }),
-        addStatic("http://192.168.3.4:8888/api/v1/resource/5e329bec2a3b25b542cab5af6e4087f.jpg"),
+        // addStatic("http://192.168.3.4:8888/api/v1/resource/5e329bec2a3b25b542cab5af6e4087f.jpg"),
       ],
       view: new View({
         center: fromLonLat([107.54044733888277,24.59310726828751]),
