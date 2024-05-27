@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"log"
+	"os"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -94,6 +95,10 @@ func NewConf(configPath string) (*Conf, error) {
 		}
 	})
 	GlobalConf = conf
+	// judge resource path is existed
+	if _, err := os.Stat(conf.Resource); err != nil {
+		_ = os.MkdirAll(conf.Resource, os.ModePerm)
+	}
 	return conf, nil
 }
 

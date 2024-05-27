@@ -27,6 +27,7 @@ func Setup(app *bootstrap.Application, timeout time.Duration) *http.Server {
 	if app.Conf.JWT.Enable {
 		publicRouter.Use(middleware.HandlerAuth(false))
 	}
+	publicRouter.Static("/resource", app.Conf.Resource)
 	ctrl.SetupUserAdminRoute(app, timeout, publicRouter)
 	ctrl.SetupRoleRoute(app, timeout, publicRouter)
 	ctrl.SetupMenuRoute(app, timeout, publicRouter)
