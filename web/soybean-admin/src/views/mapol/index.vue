@@ -79,6 +79,25 @@ function tiandiWmts() {
   });
 }
 
+function tiandicvaWmts() {
+  return new WMTS({
+    url: 'http://t0.tianditu.gov.cn/cva_w/wmts?tk=ce0125d2666eba13871c6f22bc456d3b&TILEMATRIXSET=w',
+    service: 'WMTS',
+    request: 'GetTile',
+    version: '1.0.0',
+    layer: 'vec',
+    style: 'default',
+    format: 'tiles',
+    projection,
+    tileGrid: new WMTSTileGrid({
+      origin: getTopLeft(projectionExtent),
+      resolutions,
+      matrixIds
+    }),
+    wrapX: true
+  });
+}
+
 onMounted(() => {
   if (mapDiv.value) {
     const map = new Map({
@@ -87,8 +106,9 @@ onMounted(() => {
         new TileLayer({
           source: new OSM()
         }),
+
         new TileLayer({
-          opacity: 0.7,
+          opacity: 1,
           source: tiandiWmts()
         }),
         // addStatic("http://192.168.3.4:8888/api/v1/resource/5e329bec2a3b25b542cab5af6e4087f.jpg"),
