@@ -2,7 +2,9 @@ package bootstrap
 
 import (
 	"context"
+
 	"gin-app/internal/domain"
+
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	gormgenerics "github.com/xjellyx/gorm-generics"

@@ -2,9 +2,11 @@ package domain
 
 import (
 	"context"
+
 	"gin-app/internal/domain/request"
 	"gin-app/internal/domain/response"
 	"gin-app/internal/domain/types"
+
 	gormgenerics "github.com/xjellyx/gorm-generics"
 	"gorm.io/gorm"
 )

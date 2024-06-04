@@ -13,6 +13,7 @@ import (
 
 	"gin-app/api/v1/route"
 	"gin-app/internal/bootstrap"
+
 	"github.com/spf13/pflag"
 )
 
@@ -44,6 +45,7 @@ func main() {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
+
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGTERM, syscall.SIGQUIT)
 	<-sigterm

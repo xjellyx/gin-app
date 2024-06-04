@@ -3,10 +3,11 @@ package str
 import (
 	"bytes"
 	"crypto/rand"
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
 	"io"
 	"math/big"
+
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 )
 
 // GenerateRandomString 生成指定长度的随机字符串

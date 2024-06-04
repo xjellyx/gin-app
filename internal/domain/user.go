@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"gin-app/internal/domain/types"
-
 	"gin-app/pkg/serror"
+
 	"github.com/jackc/pgx/v5/pgconn"
 	gormgenerics "github.com/xjellyx/gorm-generics"
 	"gorm.io/gorm"

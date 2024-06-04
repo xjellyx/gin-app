@@ -2,13 +2,15 @@ package usecase
 
 import (
 	"context"
+	"time"
+
 	"gin-app/internal/domain"
 	"gin-app/internal/domain/request"
 	"gin-app/internal/domain/response"
 	"gin-app/internal/domain/types"
 	"github.com/casbin/casbin/v2"
+
 	"gorm.io/gorm/clause"
-	"time"
 )
 
 type roleUsecase struct {

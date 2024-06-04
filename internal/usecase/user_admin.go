@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
+	"time"
+
+	"gin-app/internal/domain"
 	"gin-app/internal/domain/request"
 	"gin-app/internal/domain/response"
 	"gin-app/internal/domain/types"
 	"gin-app/pkg/str"
-	"time"
-
-	"gin-app/internal/domain"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

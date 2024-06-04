@@ -2,15 +2,15 @@ package usecase
 
 import (
 	"context"
-	"gin-app/internal/domain/request"
-	"gin-app/internal/domain/response"
-	"gin-app/internal/domain/types"
 	"log/slog"
 	"strings"
 	"time"
 
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
+	"gin-app/internal/domain/request"
+	"gin-app/internal/domain/response"
+	"gin-app/internal/domain/types"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
 
@@ -135,7 +135,7 @@ func createToken(expireTime time.Duration, key string, cla *Claims) (string, err
 	cfg := bootstrap.GetConfig()
 	cla.RegisteredClaims = jwt.RegisteredClaims{
 		IssuedAt:  jwt.NewNumericDate(now),
-		ExpiresAt: jwt.NewNumericDate(now.Add(expireTime * time.Minute)),
+		ExpiresAt: jwt.NewNumericDate(now.Add(expireTime)),
 		NotBefore: jwt.NewNumericDate(now),
 		ID:        cla.UserUuid,
 	}

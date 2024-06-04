@@ -1,11 +1,11 @@
 package ctrl
 
 import (
-	"gin-app/internal/domain/request"
 	"time"
 
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
+	"gin-app/internal/domain/request"
 	"gin-app/internal/repository"
 	"gin-app/internal/usecase"
 

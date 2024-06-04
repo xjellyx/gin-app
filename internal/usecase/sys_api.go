@@ -2,12 +2,14 @@ package usecase
 
 import (
 	"context"
-	"gin-app/internal/domain"
-	"gin-app/internal/domain/response"
-	"github.com/google/uuid"
-	"gorm.io/gorm/clause"
 	"sort"
 	"time"
+
+	"gin-app/internal/domain"
+	"gin-app/internal/domain/response"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 type SysAPIConfig struct {

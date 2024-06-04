@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"gin-app/docs"
-	"gin-app/pkg/scontext"
-	"gin-app/pkg/serror"
-	"gin-app/pkg/sslog"
 	"log/slog"
 	"strings"
 
+	"gin-app/docs"
 	"gin-app/internal/domain"
+	"gin-app/pkg/scontext"
+	"gin-app/pkg/serror"
+	"gin-app/pkg/sslog"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	gormgenerics "github.com/xjellyx/gorm-generics"

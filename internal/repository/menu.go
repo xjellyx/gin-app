@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gin-app/internal/domain"
+
 	gormgenerics "github.com/xjellyx/gorm-generics"
 )
 

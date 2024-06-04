@@ -3,8 +3,6 @@ package middleware
 import (
 	"bytes"
 	"errors"
-	"gin-app/internal/domain/response"
-	"gin-app/internal/domain/types"
 	"io"
 	"log/slog"
 	"strconv"
@@ -12,6 +10,8 @@ import (
 	"time"
 
 	"gin-app/internal/bootstrap"
+	"gin-app/internal/domain/response"
+	"gin-app/internal/domain/types"
 	"gin-app/internal/usecase"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"

@@ -1,12 +1,13 @@
 package ctrl
 
 import (
+	"time"
+
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
 	"gin-app/internal/repository"
 	"gin-app/internal/usecase"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 type sysAPICtrl struct {

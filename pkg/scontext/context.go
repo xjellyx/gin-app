@@ -2,8 +2,9 @@ package scontext
 
 import (
 	"context"
-	"golang.org/x/text/language"
 	"strings"
+
+	"golang.org/x/text/language"
 )
 
 type languageCtxTag struct {

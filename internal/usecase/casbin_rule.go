@@ -2,18 +2,18 @@ package usecase
 
 import (
 	"context"
-	"gin-app/internal/domain"
-	"gin-app/internal/domain/types"
-	"github.com/casbin/casbin/v2"
-	"github.com/spf13/cast"
 	"log/slog"
 	"strconv"
 	"time"
 
+	"gin-app/internal/domain"
 	"gin-app/internal/domain/request"
+	"gin-app/internal/domain/types"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
+	"github.com/casbin/casbin/v2"
 
+	"github.com/spf13/cast"
 	"gorm.io/gorm/clause"
 )
 

@@ -1,15 +1,17 @@
 package ctrl
 
 import (
+	"time"
+
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
 	"gin-app/internal/domain/request"
 	"gin-app/internal/domain/types"
 	"gin-app/internal/repository"
 	"gin-app/internal/usecase"
+
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
-	"time"
 )
 
 type menuController struct {

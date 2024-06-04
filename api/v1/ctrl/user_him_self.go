@@ -1,9 +1,9 @@
 package ctrl
 
 import (
-	"gin-app/api/v1/middleware"
 	"time"
 
+	"gin-app/api/v1/middleware"
 	"gin-app/internal/bootstrap"
 	"gin-app/internal/domain"
 	"gin-app/internal/repository"
