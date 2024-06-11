@@ -37,7 +37,14 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer app.Close()
+	// close application
+	defer func(app *bootstrap.Application) {
+		err = app.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(app)
+	// create server
 	srv := route.Setup(app, time.Second*3)
 	go func() {
 		log.Println("Server is running on port:", app.Conf.HTTPort)
@@ -45,7 +52,7 @@ func main() {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
-
+	// graceful shutdown
 	sigterm := make(chan os.Signal, 1)
 	signal.Notify(sigterm, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGTERM, syscall.SIGQUIT)
 	<-sigterm
@@ -63,14 +70,21 @@ var (
 )
 
 func init() {
+	// 配置文件路径
 	pflag.StringVar(&config, "c", "config/config.yaml", "choose config file.")
 	pflag.BoolVar(&ShowVersion, "v", false, "version")
-	// 配置文件路径
+	// HTTP
 	pflag.Int("HTTP_PORT", 8818, "")
 	// 数据库
 	pflag.String("DB_DRIVER", "postgresql", "")
 	pflag.String("DB_DSN", "postgres://postgres:123456@localhost:5432/public?sslmode=disable&TimeZone=Asia/Shanghai", "")
 	pflag.Bool("DB_AUTO_MIGRATE", false, "")
+	// Redis
+	pflag.String("RDB_ADDR", "localhost:6379", "")
+	pflag.String("RDB_PWD", "", "")
+	pflag.Int("RDB_DB", 0, "")
+	pflag.String("RDB_PREFIX", "", "")
+	pflag.Parse()
 	if len(os.Args) == 2 && (os.Args[1] == "-v" || os.Args[1] == "-version") {
 		fmt.Println(version())
 		os.Exit(1)

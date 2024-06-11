@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// User 学生表模型
+// User 用户表模型
 type User struct {
 	gorm.Model
 	Uuid     string           `gorm:"size:36;uniqueIndex;default:null;comment:用户uuid"`
