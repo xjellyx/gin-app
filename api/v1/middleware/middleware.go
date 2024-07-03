@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"gin-app/internal/bootstrap"
@@ -66,7 +67,14 @@ func HandlerError() gin.HandlerFunc {
 	}
 }
 
+var (
+	translateLock = new(sync.RWMutex)
+)
+
 func translate(language string) ut.Translator {
+	// 防止并发导致RegisterDefaultTranslations的map写入冲突
+	translateLock.Lock()
+	defer translateLock.Unlock()
 	var trans ut.Translator
 	var validate = binding.Validator.Engine().(*validator.Validate)
 	switch language {
