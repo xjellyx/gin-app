@@ -13,5 +13,6 @@
   "USER_RECORD_NOT_FOUND": "User record not found",
   "ERR_RECORD_NOT_FOUND": "Record not found",
   "CASBIN_REMOVE_FAIL": "Casbin remove filtered policy failed",
-  "CASBIN_ADD_FAIL": "Casbin add policy failed"
+  "CASBIN_ADD_FAIL": "Casbin add policy failed",
+  "BAD_REQUEST": "Bad request"
 }

@@ -3,6 +3,7 @@ package middleware
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"strconv"
@@ -60,6 +61,11 @@ func HandlerError() gin.HandlerFunc {
 				slog.Error("HandlerError", "uri", c.Request.RequestURI, "err", c.Errors)
 				resp.Code = string(serror.ErrCodeInternalServerError)
 				resp.Msg = serror.Error(serror.ErrCodeInternalServerError, scontext.GetLanguage(c.Request.Context())).Error()
+				resp.InternalError = fmt.Sprintf("%+v", last.Err)
+				if strings.Contains(c.Errors.String(), "json: cannot unmarshal") {
+					resp.Code = string(serror.ErrCodeBadRequest)
+					resp.Msg = serror.Error(serror.ErrCodeBadRequest, scontext.GetLanguage(c.Request.Context())).Error()
+				}
 			}
 			c.JSON(200, resp)
 			return

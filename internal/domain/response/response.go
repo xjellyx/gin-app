@@ -6,6 +6,8 @@ type Response struct {
 	Code string `json:"code"`
 	// Msg 返回提示
 	Msg string `json:"msg"`
+	// InternalError 错误信息
+	InternalError string `json:"internalError,omitempty"`
 	// Data 返回数据
 	Data any `json:"data"`
 }

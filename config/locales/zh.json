@@ -13,5 +13,6 @@
   "USER_RECORD_NOT_FOUND": "找不到用户记录",
   "RECORD_NOT_FOUND": "找不到记录",
   "CASBIN_REMOVE_FAIL": "删除casbin策略失败",
-  "CASBIN_ADD_FAIL": "添加casbin策略失败"
+  "CASBIN_ADD_FAIL": "添加casbin策略失败",
+  "BAD_REQUEST": "错误的请求"
 }
