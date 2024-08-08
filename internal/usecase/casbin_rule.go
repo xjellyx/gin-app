@@ -11,8 +11,8 @@ import (
 	"gin-app/internal/domain/types"
 	"gin-app/pkg/scontext"
 	"gin-app/pkg/serror"
-	"github.com/casbin/casbin/v2"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/spf13/cast"
 	"gorm.io/gorm/clause"
 )

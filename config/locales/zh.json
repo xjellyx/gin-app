@@ -14,5 +14,16 @@
   "RECORD_NOT_FOUND": "找不到记录",
   "CASBIN_REMOVE_FAIL": "删除casbin策略失败",
   "CASBIN_ADD_FAIL": "添加casbin策略失败",
-  "BAD_REQUEST": "错误的请求"
+  "BAD_REQUEST": "错误的请求",
+  "DEPARTMENT_EXIST": "该部门已存在",
+  "DEPARTMENT_NOT_EXIST": "该部门不存在",
+  "DEPARTMENT_RECORD_NOT_FOUND": "找不到部门记录",
+  "DEPARTMENT_STATUS_ABNORMAL": "该部门状态异常",
+  "DEPARTMENT_NAME_EXIST": "该部门名已存在",
+  "DEPARTMENT_NAME_NOT_EXIST": "该部门名不存在",
+  "ROLE_EXIST": "该角色已存在",
+  "ROLE_NOT_EXIST": "该角色不存在",
+  "ROLE_RECORD_NOT_FOUND": "找不到角色记录",
+  "ROLE_NAME_EXIST": "该角色名已存在",
+  "ROLE_NAME_NOT_EXIST": "该角色名不存在"
 }

@@ -14,5 +14,15 @@
   "ERR_RECORD_NOT_FOUND": "Record not found",
   "CASBIN_REMOVE_FAIL": "Casbin remove filtered policy failed",
   "CASBIN_ADD_FAIL": "Casbin add policy failed",
-  "BAD_REQUEST": "Bad request"
+  "BAD_REQUEST": "Bad request",
+  "DEPARTMENT_EXIST": "Department exist",
+  "DEPARTMENT_NOT_EXIST": "Department not exist",
+  "DEPARTMENT_RECORD_NOT_FOUND": "Department record not found",
+  "DEPARTMENT_STATUS_ABNORMAL": "Department status is abnormal",
+  "DEPARTMENT_NAME_EXIST": "Department name exist",
+  "DEPARTMENT_NAME_NOT_EXIST": "Department name not exist",
+  "ROLE_EXIST": "Role exist",
+  "ROLE_NOT_EXIST": "Role not exist",
+  "ROLE_RECORD_NOT_FOUND": "Role record not found",
+  "ROLE_NAME_EXIST": "Role name exist"
 }
